@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juárez Beltrán — Indices de Actualización</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    background: #f8fafc;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+  }
+
+  /* ── HEADER (exact JB style) ── */
+  header {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: white;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+  }
+  header .content { position: relative; z-index: 1; }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.025em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  header .subtitle {
+    font-size: 15px;
+    opacity: 0.9;
+    margin-top: 8px;
+    font-weight: 400;
+  }
+  .logo-wrap { width: 80px; max-width: 90%; margin: 0 auto 18px auto; color: white; }
+  .logo-wrap svg { width: 100%; height: auto; display: block; }
+  .isologo-wrap svg { width: 80px; height: 80px; margin: 0 auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+
+  /* ── MAIN CONTENT ── */
+  .main-content { padding: 32px; }
+
+  /* ── SECTION (exact JB style) ── */
+  .section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 28px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .section:hover {
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+  .section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 16px 16px 0 0;
+  }
+  .section.green::before {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e40af;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.025em;
+  }
+  .section.green h2 { color: #16a34a; }
+
+  .badge {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #dcfce7; color: #16a34a; }
+
+  /* ── DATE SELECTOR ── */
+  .date-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 20px 28px;
+    background: #eff6ff;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #dbeafe;
+  }
+
+  .date-section label {
+    font-weight: 600;
+    font-size: 15px;
+    color: #334155;
+  }
+
+  .date-section input[type="date"] {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: white;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .date-section input[type="date"]:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+  }
+
+  .btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+  }
+
+  .ref-info {
+    font-size: 13px;
+    color: #64748b;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .idx-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .idx-table thead th {
+    text-align: left;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 8px 6px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .idx-table thead th.r { text-align: right; }
+
+  .idx-table tbody td {
+    padding: 12px 6px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+
+  .idx-table tbody tr:last-child td { border-bottom: none; }
+  .idx-table tbody tr:hover { background: #f8fafc; }
+
+  .period-name { font-weight: 600; color: #334155; }
+
+  .range-cell {
+    font-size: 13px;
+    color: #64748b;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .range-vals { font-weight: 500; color: #475569; }
+
+  .pct-cell {
+    text-align: right;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .pct-blue { color: #2563eb; }
+  .pct-green { color: #16a34a; }
+  .pct-red { color: #dc2626; }
+
+  /* ── GRID ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* ── FOOTER ── */
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+    padding: 12px 20px 0;
+    line-height: 1.8;
+  }
+  .footer-note a { color: #2563eb; text-decoration: none; }
+  .footer-note a:hover { text-decoration: underline; }
+
+  .error-banner {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    body { padding: 10px; }
+    .container { border-radius: 12px; }
+    header { padding: 24px; }
+    header h1 { font-size: 22px; }
+    .main-content { padding: 16px; }
+    .section { padding: 20px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .date-section { flex-direction: column; align-items: stretch; }
+    .ref-info { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="content">
+      <div class="logo-wrap isologo-wrap"><svg width="80" height="80" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0,250) scale(0.1,-0.1)" fill="currentColor" stroke="none">
+          <path d="M315 2328 c-56 -29 -93 -65 -123 -123 l-27 -50 0 -895 c0 -887 0 -895 21 -940 25 -54 72 -103 128 -133 l41 -22 896 -3 896 -2 64 33 c69 35 119 95 139 165 6 24 10 343 10 898 0 962 3 924 -70 1006 -22 25 -60 55 -85 67 -45 21 -48 21 -947 21 -893 -1 -903 -1 -943 -22z m1862 -117 c66 -50 63 0 63 -956 0 -955 4 -898 -63 -949 l-34 -26 -880 0 -880 0 -33 23 c-18 12 -41 38 -51 57 -18 33 -19 77 -19 898 0 929 -2 889 52 939 12 12 34 26 48 32 16 6 331 9 895 8 l870 -2 32 -24z"/>
+          <path d="M890 1255 l0 -685 175 0 175 0 0 685 0 685 -175 0 -175 0 0 -685z"/>
+          <path d="M1300 1255 l0 -685 165 0 165 0 0 685 0 685 -165 0 -165 0 0 -685z"/>
+          <path d="M1680 1615 l0 -325 170 0 170 0 0 263 c0 253 -1 263 -23 302 -36 64 -88 85 -214 85 l-103 0 0 -325z"/>
+          <path d="M1680 905 l0 -325 110 0 c126 0 153 9 197 67 l28 36 3 274 3 273 -171 0 -170 0 0 -325z"/>
+          <path d="M500 953 c0 -267 7 -298 71 -344 30 -21 46 -24 152 -27 l117 -4 0 300 0 300 -22 6 c-13 3 -89 6 -170 6 l-148 0 0 -237z"/>
+        </g>
+      </svg></div>
+      <h1>ÍNDICES DE ACTUALIZACIÓN</h1>
+      <div class="subtitle">Juárez Beltrán S.A. - Asesores Inmobiliarios</div>
+    </div>
+  </header>
+
+  <div class="main-content">
+
+    <div class="date-section">
+      <label for="refDate">Fecha de referencia:</label>
+      <input type="date" id="refDate">
+      <button class="btn" onclick="calculate()">Calcular</button>
+      <div class="ref-info" id="refInfo"></div>
+    </div>
+
+    <div class="error-banner" id="errorMsg"></div>
+
+    <div class="grid-2">
+
+      <!-- ICL -->
+      <div class="section">
+        <div class="section-head">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            ICL
+          </h2>
+          <span class="badge badge-blue">BCRA · Diario</span>
+        </div>
+        <table class="idx-table" id="iclTable">
+          <thead><tr>
+            <th>Período</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variación</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- IPC -->
+      <div class="section green">
+        <div class="section-head">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            IPC Nivel General
+          </h2>
+          <span class="badge badge-green">INDEC · Mensual</span>
+        </div>
+        <table class="idx-table" id="ipcTable">
+          <thead><tr>
+            <th>Período</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variación</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="footer-note">
+      Fuentes: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA — ICL serie 7988</a> · 
+      <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC — IPC Nacional</a><br>
+      IPC calculado con variaciones mensuales oficiales acumuladas (último dato publicado).<br>
+      Para actualizar: editar <code>iclData</code> e <code>ipcVar</code> en el código fuente.
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ================================================================
+// ICL: Valores OFICIALES BCRA del día 1 de cada mes (serie 7988)
+// Para actualizar: agregar una nueva línea con el valor del día 1
+// ================================================================
+const iclData = {
+  '2024-06-01': 15.54, '2024-07-01': 16.45, '2024-08-01': 17.39,
+  '2024-09-01': 18.32, '2024-10-01': 19.12, '2024-11-01': 19.79,
+  '2024-12-01': 20.43, '2025-01-01': 21.15, '2025-02-01': 21.88,
+  '2025-03-01': 22.59, '2025-04-01': 23.31, '2025-05-01': 24.26,
+  '2025-06-01': 25.20, '2025-07-01': 26.03, '2025-08-01': 26.62,
+  '2025-09-01': 27.14, '2025-10-01': 27.75, '2025-11-01': 28.31,
+  '2025-12-01': 28.77, '2026-01-01': 29.39, '2026-02-01': 30.03,
+  '2026-03-01': 30.58, '2026-04-01': 31.22, '2026-05-01': 32.13,
+  '2026-06-01': 33.27,
+};
+
+// ================================================================
+// IPC: Variaciones mensuales INDEC (nivel general, nacional)
+// Para actualizar: agregar una línea con la variación del nuevo mes
+// ================================================================
+const ipcVar = {
+  '2024-01': 0.206, '2024-02': 0.132, '2024-03': 0.110,
+  '2024-04': 0.088, '2024-05': 0.042, '2024-06': 0.046,
+  '2024-07': 0.040, '2024-08': 0.042, '2024-09': 0.035,
+  '2024-10': 0.027, '2024-11': 0.024, '2024-12': 0.027,
+  '2025-01': 0.022, '2025-02': 0.024, '2025-03': 0.037,
+  '2025-04': 0.028, '2025-05': 0.015, '2025-06': 0.016,
+  '2025-07': 0.019, '2025-08': 0.019, '2025-09': 0.021,
+  '2025-10': 0.023, '2025-11': 0.025, '2025-12': 0.028,
+  '2026-01': 0.029, '2026-02': 0.029, '2026-03': 0.034,
+  '2026-04': 0.026,
+};
+
+// Build IPC index from variations (base dic 2023 = 100)
+function buildIpcIndex() {
+  const idx = { '2023-12': 100 };
+  for (const m of Object.keys(ipcVar).sort()) {
+    const [y, mo] = m.split('-').map(Number);
+    let py = y, pm = mo - 1;
+    if (pm === 0) { pm = 12; py--; }
+    const pk = `${py}-${String(pm).padStart(2,'0')}`;
+    if (idx[pk] != null) idx[m] = idx[pk] * (1 + ipcVar[m]);
+  }
+  return idx;
+}
+const ipcIndex = buildIpcIndex();
+
+const MN = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+function fmtMY(ds) { const d = new Date(ds+'T12:00:00'); return MN[d.getMonth()]+'-'+String(d.getFullYear()).slice(2); }
+function fmtMYf(ds) { const d = new Date(ds+'T12:00:00'); return MN[d.getMonth()]+'-'+d.getFullYear(); }
+
+function subM(ds, n) {
+  const d = new Date(ds+'T12:00:00');
+  d.setMonth(d.getMonth()-n);
+  return d.toISOString().slice(0,10);
+}
+
+function getNextMonthFirst() {
+  const now = new Date();
+  let y = now.getFullYear(), m = now.getMonth()+2;
+  if (m > 12) { m = 1; y++; }
+  return `${y}-${String(m).padStart(2,'0')}-01`;
+}
+
+function calculate() {
+  const ref = document.getElementById('refDate').value;
+  const err = document.getElementById('errorMsg');
+  err.style.display = 'none';
+  if (!ref) { err.textContent = 'Seleccioná una fecha.'; err.style.display = 'block'; return; }
+
+  const rf = ref.slice(0,8)+'01';
+  document.getElementById('refInfo').textContent = 'Calculando al 1/' + fmtMYf(rf);
+
+  const P = [
+    { label: 'Anual', m: 12 },
+    { label: 'Semestral', m: 6 },
+    { label: 'Cuatrimestral', m: 4 },
+    { label: 'Trimestral', m: 3 },
+  ];
+
+  // ICL
+  const ib = document.querySelector('#iclTable tbody');
+  ib.innerHTML = '';
+  let es = [];
+
+  for (const p of P) {
+    const ek = rf, sk = subM(rf, p.m);
+    const ev = iclData[ek], sv = iclData[sk];
+    if (ev == null) es.push('ICL: sin dato para '+fmtMYf(ek));
+    if (sv == null) es.push('ICL: sin dato para '+fmtMYf(sk));
+    if (ev != null && sv != null) {
+      const v = ((ev/sv)-1)*100;
+      ib.innerHTML += `<tr><td class="period-name">${p.label}</td><td class="range-cell">${fmtMY(sk)} → ${fmtMY(ek)}</td><td class="range-cell"><span class="range-vals">${sv.toFixed(2)} → ${ev.toFixed(2)}</span></td><td class="pct-cell pct-blue">${v.toFixed(2)}%</td></tr>`;
+    } else {
+      ib.innerHTML += `<tr><td class="period-name">${p.label}</td><td class="range-cell">—</td><td class="range-cell">—</td><td class="pct-cell pct-red">sin dato</td></tr>`;
+    }
+  }
+
+  // IPC
+  const jb = document.querySelector('#ipcTable tbody');
+  jb.innerHTML = '';
+  const iks = Object.keys(ipcIndex).sort();
+  const li = iks[iks.length-1];
+
+  for (const p of P) {
+    const ek = li;
+    const sd = new Date(ek+'-01T12:00:00');
+    sd.setMonth(sd.getMonth()-p.m);
+    const sk = `${sd.getFullYear()}-${String(sd.getMonth()+1).padStart(2,'0')}`;
+    const ev = ipcIndex[ek], sv = ipcIndex[sk];
+    if (ev != null && sv != null) {
+      const v = ((ev/sv)-1)*100;
+      jb.innerHTML += `<tr><td class="period-name">${p.label}</td><td class="range-cell">${fmtMY(sk+'-01')} → ${fmtMY(ek+'-01')}</td><td class="range-cell"><span class="range-vals">${sv.toFixed(2)} → ${ev.toFixed(2)}</span></td><td class="pct-cell pct-green">${v.toFixed(2)}%</td></tr>`;
+    } else {
+      jb.innerHTML += `<tr><td class="period-name">${p.label}</td><td class="range-cell">—</td><td class="range-cell">—</td><td class="pct-cell pct-red">sin dato</td></tr>`;
+    }
+  }
+
+  if (es.length) { err.innerHTML = [...new Set(es)].join('<br>'); err.style.display = 'block'; }
+}
+
+// Auto-init: next month's 1st
+document.getElementById('refDate').value = getNextMonthFirst();
+calculate();
+</script>
+</body>
+</html>
