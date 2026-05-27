@@ -22,15 +22,12 @@
   .section:hover{box-shadow:0 10px 15px -3px rgba(0,0,0,.1);transform:translateY(-2px)}
   .section::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:16px 16px 0 0}
   .section.green::before{background:linear-gradient(135deg,#22c55e,#16a34a)}
-  .section.amber::before{background:linear-gradient(135deg,#f59e0b,#d97706)}
   .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px}
   h2{font-size:20px;font-weight:700;color:#1e40af;margin:0;display:flex;align-items:center;gap:10px;letter-spacing:-.025em}
   .section.green h2{color:#16a34a}
-  .section.amber h2{color:#b45309}
   .badge{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
   .badge-blue{background:#dbeafe;color:#1e40af}
   .badge-green{background:#dcfce7;color:#16a34a}
-  .badge-amber{background:#fef3c7;color:#92400e}
   .date-section{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:20px 28px;background:#eff6ff;border-radius:16px;margin-bottom:20px;border:1px solid #dbeafe}
   .date-section label{font-weight:600;font-size:15px;color:#334155}
   .date-section input[type="date"]{font-family:'Inter',sans-serif;font-size:15px;padding:10px 14px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#1e293b;outline:0;transition:border-color .2s,box-shadow .2s}
@@ -48,44 +45,41 @@
   .range-cell{font-size:13px;color:#64748b;text-align:right;line-height:1.6}
   .vals-cell{font-size:13px;color:#475569;text-align:right;font-weight:500}
   .pct-cell{text-align:right;font-weight:700;font-size:16px}
-  .pct-blue{color:#2563eb}.pct-green{color:#16a34a}.pct-amber{color:#b45309}.pct-red{color:#dc2626}
-  .grid-3{display:grid;grid-template-columns:1fr;gap:20px}
+  .pct-blue{color:#2563eb}.pct-green{color:#16a34a}.pct-red{color:#dc2626}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr;gap:20px}
   .footer-note{text-align:center;font-size:12px;color:#94a3b8;padding:12px 20px 0;line-height:1.8}
   .footer-note a{color:#2563eb;text-decoration:none}
   .footer-note a:hover{text-decoration:underline}
   .error-banner{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:12px 16px;border-radius:10px;font-size:14px;margin-bottom:16px;display:none}
 
   /* ── SCREENSHOT CARD ── */
-  .ss-card{background:linear-gradient(145deg,#0f172a 0%,#1e293b 100%);border-radius:14px;padding:16px 18px;margin:28px auto 0;max-width:520px;color:#e2e8f0;position:relative;overflow:hidden}
+  .ss-card{background:linear-gradient(145deg,#0f172a 0%,#1e293b 100%);border-radius:14px;padding:20px 22px;margin:28px auto 0;max-width:520px;color:#e2e8f0;position:relative;overflow:hidden}
   .ss-card::before{content:'';position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="g2" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23g2)"/></svg>')}
   .ss-inner{position:relative;z-index:1}
-  .ss-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
-  .ss-logo{display:flex;align-items:center;gap:8px}
-  .ss-logo svg{width:26px;height:26px;color:rgba(255,255,255,.9)}
+  .ss-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .ss-logo{display:flex;align-items:center;gap:10px}
+  .ss-logo svg{width:32px;height:32px;color:rgba(255,255,255,.9)}
   .ss-logo-text{line-height:1.2}
-  .ss-logo-name{font-size:11px;font-weight:700;color:#fff;letter-spacing:.3px}
-  .ss-logo-sub{font-size:8px;color:#64748b;letter-spacing:1px;text-transform:uppercase}
+  .ss-logo-name{font-size:14px;font-weight:700;color:#fff;letter-spacing:.3px}
+  .ss-logo-sub{font-size:9px;color:#64748b;letter-spacing:1px;text-transform:uppercase}
   .ss-date{text-align:right}
-  .ss-date-label{font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.8px}
-  .ss-date-val{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.5px}
-  .ss-title{text-align:center;font-size:10px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
-  .ss-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid rgba(255,255,255,.08);border-radius:8px;overflow:hidden}
+  .ss-date-label{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.8px}
+  .ss-date-val{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.5px}
+  .ss-title{text-align:center;font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
+  .ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(255,255,255,.08);border-radius:8px;overflow:hidden}
   .ss-col{padding:0}
-  .ss-col-head{padding:6px 8px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;text-align:center}
+  .ss-col-head{padding:8px 10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;text-align:center}
   .ss-col:nth-child(1) .ss-col-head{background:rgba(37,99,235,.15);color:#60a5fa}
   .ss-col:nth-child(2) .ss-col-head{background:rgba(22,163,74,.12);color:#4ade80}
-  .ss-col:nth-child(3) .ss-col-head{background:rgba(245,158,11,.12);color:#fbbf24}
-  .ss-row{display:flex;justify-content:space-between;padding:5px 8px;border-top:1px solid rgba(255,255,255,.04);font-size:10px}
+  .ss-row{display:flex;justify-content:space-between;padding:7px 10px;border-top:1px solid rgba(255,255,255,.04);font-size:13px}
   .ss-row:hover{background:rgba(255,255,255,.02)}
   .ss-row-label{color:#94a3b8;font-weight:500}
   .ss-row-val{font-weight:700;font-variant-numeric:tabular-nums}
   .ss-col:nth-child(1) .ss-row-val{color:#60a5fa}
   .ss-col:nth-child(2) .ss-row-val{color:#4ade80}
-  .ss-col:nth-child(3) .ss-row-val{color:#fbbf24}
-  .ss-footer{text-align:center;margin-top:8px;font-size:8px;color:#475569;letter-spacing:.3px}
+  .ss-footer{text-align:center;margin-top:10px;font-size:9px;color:#475569;letter-spacing:.3px}
 
-  @media(max-width:900px){.ss-grid{grid-template-columns:1fr}}
-  @media(max-width:768px){body{padding:10px}.container{border-radius:12px}header{padding:24px}header h1{font-size:22px}.main-content{padding:16px}.section{padding:20px}.date-section{flex-direction:column;align-items:stretch}.ref-info{margin-left:0}}
+  @media(max-width:768px){body{padding:10px}.container{border-radius:12px}header{padding:24px}header h1{font-size:22px}.main-content{padding:16px}.section{padding:20px}.grid-3{grid-template-columns:1fr}.ss-grid{grid-template-columns:1fr}.date-section{flex-direction:column;align-items:stretch}.ref-info{margin-left:0}}
 </style>
 </head>
 <body>
@@ -117,7 +111,6 @@
     <div class="grid-3">
       <div class="section"><div class="section-head"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> ICL</h2><span class="badge badge-blue">BCRA</span></div><table class="idx-table" id="iclTable"><thead><tr><th>Periodo</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variacion</th></tr></thead><tbody></tbody></table></div>
       <div class="section green"><div class="section-head"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> IPC</h2><span class="badge badge-green">INDEC</span></div><table class="idx-table" id="ipcTable"><thead><tr><th>Periodo</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variacion</th></tr></thead><tbody></tbody></table></div>
-      <div class="section amber"><div class="section-head"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/></svg> Casa Propia</h2><span class="badge badge-amber">GOB.AR</span></div><table class="idx-table" id="cpTable"><thead><tr><th>Periodo</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variacion</th></tr></thead><tbody></tbody></table></div>
     </div>
 
     <!-- ── SCREENSHOT CARD ── -->
@@ -134,124 +127,150 @@
         <div class="ss-grid" id="ssGrid">
           <div class="ss-col" id="ssIcl"><div class="ss-col-head">ICL · BCRA</div></div>
           <div class="ss-col" id="ssIpc"><div class="ss-col-head">IPC · INDEC</div></div>
-          <div class="ss-col" id="ssCp"><div class="ss-col-head">Casa Propia</div></div>
         </div>
-        <div class="ss-footer">Fuentes: BCRA serie 7988 · INDEC IPC Nivel General · argentina.gob.ar/habitat</div>
+        <div class="ss-footer">Fuentes: BCRA serie 7988 · INDEC IPC Nivel General</div>
       </div>
     </div>
 
     <div class="footer-note">
-      Fuentes: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA — ICL</a> · 
-      <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC — IPC</a> · 
-      <a href="https://www.argentina.gob.ar/habitat/procrear/coeficiente-casa-propia" target="_blank">Casa Propia</a><br>
-      Para actualizar: editar <code>iclData</code>, <code>ipcVar</code> y <code>cpCoef</code> en el código fuente.
+      Datos en vivo via <a href="https://www.argly.com.ar/" target="_blank">Argly</a> (fuente: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA</a> · <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC</a>)<br>
+      Los datos se actualizan automaticamente cada vez que abris la pagina.
     </div>
   </div>
 </div>
 <script>
-const iclData = {
-  '2024-06':15.54,'2024-07':16.45,'2024-08':17.39,'2024-09':18.32,
-  '2024-10':19.12,'2024-11':19.79,'2024-12':20.43,
-  '2025-01':21.15,'2025-02':21.88,'2025-03':22.59,'2025-04':23.31,
-  '2025-05':24.26,'2025-06':25.20,'2025-07':26.03,'2025-08':26.62,
-  '2025-09':27.14,'2025-10':27.75,'2025-11':28.31,'2025-12':28.77,
-  '2026-01':29.39,'2026-02':30.03,'2026-03':30.58,'2026-04':31.22,
-  '2026-05':32.13,'2026-06':33.27,
-};
-const ipcVar = {
-  '2024-01':.206,'2024-02':.132,'2024-03':.110,'2024-04':.088,
-  '2024-05':.042,'2024-06':.046,'2024-07':.040,'2024-08':.042,
-  '2024-09':.035,'2024-10':.027,'2024-11':.024,'2024-12':.027,
-  '2025-01':.022,'2025-02':.024,'2025-03':.037,'2025-04':.028,
-  '2025-05':.015,'2025-06':.016,'2025-07':.019,'2025-08':.019,
-  '2025-09':.021,'2025-10':.023,'2025-11':.025,'2025-12':.028,
-  '2026-01':.029,'2026-02':.029,'2026-03':.034,'2026-04':.026,
-};
-const cpCoef = {
-  '2024-01':1.0689,'2024-02':1.0708,'2024-03':1.0727,'2024-04':1.0749,
-  '2024-05':1.0859,'2024-06':1.0920,'2024-07':1.0921,'2024-08':1.0939,
-  '2024-09':1.0924,'2024-10':1.0890,'2024-11':1.0858,'2024-12':1.0820,
-  '2025-01':1.0708,'2025-02':1.0719,'2025-03':1.0671,'2025-04':1.0622,
-  '2025-05':1.0545,'2025-06':1.0491,'2025-07':1.0440,'2025-08':1.0385,
-  '2025-09':1.0328,'2025-10':1.0306,'2025-11':1.0281,'2025-12':1.0264,
-  '2026-01':1.0244,'2026-02':1.0233,'2026-03':1.0229,'2026-04':1.0227,
-  '2026-05':1.0229,'2026-06':1.0230,
-};
+// ── Estado global ──
+let iclData = {};  // 'YYYY-MM': valor del día 1
+let ipcIndex = {}; // 'YYYY-MM': indice acumulado (base dic-2023=100)
+let dataReady = false;
 
-function buildIdx(){const idx={'2023-12':100};for(const m of Object.keys(ipcVar).sort()){const[y,mo]=m.split('-').map(Number);let py=y,pm=mo-1;if(pm===0){pm=12;py--}const pk=`${py}-${String(pm).padStart(2,'0')}`;if(idx[pk]!=null)idx[m]=idx[pk]*(1+ipcVar[m])}return idx}
-const ipcIndex=buildIdx();
 const MN=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const MNU=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 function fmtMY(ym){const[y,m]=ym.split('-');return MN[+m-1]+'-'+y.slice(2)}
 function fmtMYup(ym){const[y,m]=ym.split('-');return MNU[+m-1]+' '+y}
 function subM(ym,n){const[y,m]=[+ym.split('-')[0],+ym.split('-')[1]];let ny=y,nm=m-n;while(nm<1){nm+=12;ny--}return`${ny}-${String(nm).padStart(2,'0')}`}
-function cpAccum(s,e){const ks=Object.keys(cpCoef).sort();let acc=1,si=ks.indexOf(s),ei=ks.indexOf(e);if(si<0||ei<0)return null;for(let i=si+1;i<=ei;i++)acc*=cpCoef[ks[i]];return acc}
 function getNextMonthFirst(){const n=new Date;let y=n.getFullYear(),m=n.getMonth()+2;if(m>12){m=1;y++}return`${y}-${String(m).padStart(2,'0')}-01`}
 function row(l,r,vals,p,c){return`<tr><td class="period-name">${l}</td><td class="range-cell">${r}</td><td class="vals-cell">${vals}</td><td class="pct-cell ${c}">${p}</td></tr>`}
 function ssRow(l,v){return`<div class="ss-row"><span class="ss-row-label">${l}</span><span class="ss-row-val">${v}</span></div>`}
 
-function calculate(){
-  const ref=document.getElementById('refDate').value;
-  const err=document.getElementById('errorMsg');
-  err.style.display='none';
-  if(!ref){err.textContent='Selecciona una fecha.';err.style.display='block';return}
-  const ym=ref.slice(0,7);
-  document.getElementById('refInfo').textContent='Calculando al 1/'+fmtMY(ym);
-  document.getElementById('ssDateVal').textContent=fmtMYup(ym);
+// ── Carga de datos desde Argly (fuente: BCRA + INDEC) ──
+async function loadData() {
+  const err = document.getElementById('errorMsg');
+  const btn = document.querySelector('.btn');
+  btn.textContent = 'Cargando datos...';
+  btn.disabled = true;
 
-  const P=[{l:'Anual',m:12},{l:'Semestral',m:6},{l:'Cuatrimestral',m:4},{l:'Trimestral',m:3}];
-  let es=[];
+  try {
+    // ICL: serie diaria BCRA via Argly — pedir desde 2 años atras
+    const now = new Date();
+    const desde = `${now.getFullYear()-2}-01-01`;
+    const hasta = `${now.getFullYear()}-12-31`;
+    const [iclRes, ipcRes] = await Promise.all([
+      fetch(`https://api.argly.com.ar/v1/icl?desde=${desde}&hasta=${hasta}`),
+      fetch(`https://api.argly.com.ar/v1/ipc?desde=${now.getFullYear()-2}-01&hasta=${now.getFullYear()}-12`)
+    ]);
+
+    if (!iclRes.ok || !ipcRes.ok) throw new Error('Error al consultar Argly');
+
+    const iclJson = await iclRes.json();
+    const ipcJson = await ipcRes.json();
+
+    // Procesar ICL: quedarnos solo con el valor del día 1 de cada mes
+    iclData = {};
+    for (const d of iclJson.data) {
+      // formato fecha: "DD/MM/YYYY"
+      const [dd, mm, yyyy] = d.fecha.split('/');
+      if (dd === '01') {
+        const ym = `${yyyy}-${mm}`;
+        iclData[ym] = parseFloat(d.valor);
+      }
+    }
+
+    // Procesar IPC: construir indice acumulado desde dic año-3 = 100
+    const ipcVar = {};
+    for (const d of ipcJson.data) {
+      const ym = `${d.anio}-${String(d.mes).padStart(2,'0')}`;
+      ipcVar[ym] = d.valor / 100; // 20.6 → 0.206
+    }
+    // Base: mes anterior al primer dato
+    const firstIpc = Object.keys(ipcVar).sort()[0];
+    if (firstIpc) {
+      const baseYm = subM(firstIpc, 1);
+      ipcIndex = {};
+      ipcIndex[baseYm] = 100;
+      for (const m of Object.keys(ipcVar).sort()) {
+        const prev = subM(m, 1);
+        if (ipcIndex[prev] != null) ipcIndex[m] = ipcIndex[prev] * (1 + ipcVar[m]);
+      }
+    }
+
+    dataReady = true;
+    btn.textContent = 'Calcular';
+    btn.disabled = false;
+
+    // Auto-calcular
+    document.getElementById('refDate').value = getNextMonthFirst();
+    calculate();
+
+  } catch (e) {
+    err.textContent = 'No se pudieron cargar los datos de Argly. Verifica tu conexion a internet. (' + e.message + ')';
+    err.style.display = 'block';
+    btn.textContent = 'Reintentar';
+    btn.disabled = false;
+    btn.onclick = loadData;
+  }
+}
+
+function calculate() {
+  if (!dataReady) { loadData(); return; }
+  const ref = document.getElementById('refDate').value;
+  const err = document.getElementById('errorMsg');
+  err.style.display = 'none';
+  if (!ref) { err.textContent = 'Selecciona una fecha.'; err.style.display = 'block'; return; }
+  const ym = ref.slice(0, 7);
+  document.getElementById('refInfo').textContent = 'Calculando al 1/' + fmtMY(ym);
+  document.getElementById('ssDateVal').textContent = fmtMYup(ym);
+
+  const P = [{l:'Anual',m:12},{l:'Semestral',m:6},{l:'Cuatrimestral',m:4},{l:'Trimestral',m:3}];
+  let es = [];
 
   // ICL
-  const ib=document.querySelector('#iclTable tbody');ib.innerHTML='';
-  const ssIcl=document.getElementById('ssIcl');ssIcl.innerHTML='<div class="ss-col-head">ICL · BCRA</div>';
-  for(const p of P){
-    const ek=ym,sk=subM(ym,p.m),ev=iclData[ek],sv=iclData[sk];
-    if(ev==null)es.push('ICL: sin dato '+fmtMY(ek));
-    if(sv==null)es.push('ICL: sin dato '+fmtMY(sk));
-    if(ev!=null&&sv!=null){
-      const v=((ev/sv)-1)*100;
-      ib.innerHTML+=row(p.l,`${fmtMY(sk)} → ${fmtMY(ek)}`,`${sv.toFixed(2)} → ${ev.toFixed(2)}`,v.toFixed(2)+'%','pct-blue');
-      ssIcl.innerHTML+=ssRow(p.l,v.toFixed(2)+'%');
-    }else{ib.innerHTML+=row(p.l,'—','—','sin dato','pct-red');ssIcl.innerHTML+=ssRow(p.l,'—')}
+  const ib = document.querySelector('#iclTable tbody'); ib.innerHTML = '';
+  const ssIcl = document.getElementById('ssIcl'); ssIcl.innerHTML = '<div class="ss-col-head">ICL · BCRA</div>';
+  for (const p of P) {
+    const ek = ym, sk = subM(ym, p.m), ev = iclData[ek], sv = iclData[sk];
+    if (ev == null) es.push('ICL: sin dato ' + fmtMY(ek));
+    if (sv == null) es.push('ICL: sin dato ' + fmtMY(sk));
+    if (ev != null && sv != null) {
+      const v = ((ev / sv) - 1) * 100;
+      ib.innerHTML += row(p.l, `${fmtMY(sk)} → ${fmtMY(ek)}`, `${sv.toFixed(2)} → ${ev.toFixed(2)}`, v.toFixed(2)+'%', 'pct-blue');
+      ssIcl.innerHTML += ssRow(p.l, v.toFixed(2)+'%');
+    } else { ib.innerHTML += row(p.l,'—','—','sin dato','pct-red'); ssIcl.innerHTML += ssRow(p.l,'—'); }
   }
 
   // IPC
-  const jb=document.querySelector('#ipcTable tbody');jb.innerHTML='';
-  const ssIpc=document.getElementById('ssIpc');ssIpc.innerHTML='<div class="ss-col-head">IPC · INDEC</div>';
-  const ipcKeys=Object.keys(ipcIndex).sort();
-  const ipcRef=subM(ym,2);
-  let latestIpc=null;
-  for(const k of ipcKeys){if(k<=ipcRef)latestIpc=k}
-  if(!latestIpc)latestIpc=ipcKeys[ipcKeys.length-1];
-  for(const p of P){
-    const ek=latestIpc,sk=subM(ek,p.m);
-    const ev=ipcIndex[ek],sv=ipcIndex[sk];
-    if(ev!=null&&sv!=null){
-      const v=((ev/sv)-1)*100;
-      jb.innerHTML+=row(p.l,`${fmtMY(sk)} → ${fmtMY(ek)}`,`${sv.toFixed(2)} → ${ev.toFixed(2)}`,v.toFixed(2)+'%','pct-green');
-      ssIpc.innerHTML+=ssRow(p.l,v.toFixed(2)+'%');
-    }else{jb.innerHTML+=row(p.l,'—','—','sin dato','pct-red');ssIpc.innerHTML+=ssRow(p.l,'—')}
+  const jb = document.querySelector('#ipcTable tbody'); jb.innerHTML = '';
+  const ssIpc = document.getElementById('ssIpc'); ssIpc.innerHTML = '<div class="ss-col-head">IPC · INDEC</div>';
+  const ipcKeys = Object.keys(ipcIndex).sort();
+  const ipcRef = subM(ym, 2);
+  let latestIpc = null;
+  for (const k of ipcKeys) { if (k <= ipcRef) latestIpc = k; }
+  if (!latestIpc) latestIpc = ipcKeys[ipcKeys.length - 1];
+  for (const p of P) {
+    const ek = latestIpc, sk = subM(ek, p.m);
+    const ev = ipcIndex[ek], sv = ipcIndex[sk];
+    if (ev != null && sv != null) {
+      const v = ((ev / sv) - 1) * 100;
+      jb.innerHTML += row(p.l, `${fmtMY(sk)} → ${fmtMY(ek)}`, `${sv.toFixed(2)} → ${ev.toFixed(2)}`, v.toFixed(2)+'%', 'pct-green');
+      ssIpc.innerHTML += ssRow(p.l, v.toFixed(2)+'%');
+    } else { jb.innerHTML += row(p.l,'—','—','sin dato','pct-red'); ssIpc.innerHTML += ssRow(p.l,'—'); }
   }
 
-  // Casa Propia
-  const cb=document.querySelector('#cpTable tbody');cb.innerHTML='';
-  const ssCp=document.getElementById('ssCp');ssCp.innerHTML='<div class="ss-col-head">Casa Propia</div>';
-  for(const p of P){
-    const ek=ym,sk=subM(ym,p.m);
-    const acc=cpAccum(sk,ek);
-    if(acc!=null){
-      const v=(acc-1)*100;
-      cb.innerHTML+=row(p.l,`${fmtMY(sk)} → ${fmtMY(ek)}`,`coef. ${acc.toFixed(4)}`,v.toFixed(2)+'%','pct-amber');
-      ssCp.innerHTML+=ssRow(p.l,v.toFixed(2)+'%');
-    }else{es.push('Casa Propia: sin dato');cb.innerHTML+=row(p.l,'—','—','sin dato','pct-red');ssCp.innerHTML+=ssRow(p.l,'—')}
-  }
-
-  if(es.length){err.innerHTML=[...new Set(es)].join('<br>');err.style.display='block'}
+  if (es.length) { err.innerHTML = [...new Set(es)].join('<br>'); err.style.display = 'block'; }
 }
 
-document.getElementById('refDate').value=getNextMonthFirst();
-calculate();
+// ── Arranque ──
+loadData();
 </script>
 </body>
 </html>
