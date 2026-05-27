@@ -219,7 +219,13 @@ async function loadData() {
 
     if (src) { src.textContent = '✓ Datos en vivo via Argly (BCRA + INDEC)'; src.style.color = '#16a34a'; }
 
-    document.getElementById('refDate').value = getNextMonthFirst();
+    // Fecha default: el ultimo mes con dato ICL disponible
+    const lastIcl = Object.keys(iclData).sort().pop();
+    if (lastIcl) {
+      document.getElementById('refDate').value = lastIcl + '-01';
+    } else {
+      document.getElementById('refDate').value = getNextMonthFirst();
+    }
     calculate();
 
   } catch (e) {
