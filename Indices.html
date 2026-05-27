@@ -133,15 +133,15 @@
     </div>
 
     <div class="footer-note">
-      Datos en vivo via <a href="https://www.argly.com.ar/" target="_blank">Argly</a> (fuente: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA</a> · <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC</a>)<br>
-      Los datos se actualizan automaticamente cada vez que abris la pagina.
+      <div id="dataSource" style="font-size:12px;font-weight:600;margin-bottom:6px"></div>
+      Datos via <a href="https://www.argly.com.ar/" target="_blank">Argly</a> (fuente: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA</a> · <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC</a>)
     </div>
   </div>
 </div>
 <script>
 // ── Estado global ──
-let iclData = {};  // 'YYYY-MM': valor del día 1
-let ipcIndex = {}; // 'YYYY-MM': indice acumulado (base dic-2023=100)
+let iclData = {};
+let ipcIndex = {};
 let dataReady = false;
 
 const MN=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
@@ -153,71 +153,82 @@ function getNextMonthFirst(){const n=new Date;let y=n.getFullYear(),m=n.getMonth
 function row(l,r,vals,p,c){return`<tr><td class="period-name">${l}</td><td class="range-cell">${r}</td><td class="vals-cell">${vals}</td><td class="pct-cell ${c}">${p}</td></tr>`}
 function ssRow(l,v){return`<div class="ss-row"><span class="ss-row-label">${l}</span><span class="ss-row-val">${v}</span></div>`}
 
+function buildIpcIndex(ipcVar) {
+  const first = Object.keys(ipcVar).sort()[0];
+  if (!first) return {};
+  const base = subM(first, 1);
+  const idx = {}; idx[base] = 100;
+  for (const m of Object.keys(ipcVar).sort()) {
+    const prev = subM(m, 1);
+    if (idx[prev] != null) idx[m] = idx[prev] * (1 + ipcVar[m]);
+  }
+  return idx;
+}
+
+// Helper: fetch con proxy CORS si falla directo
+async function fetchArgly(url) {
+  // Intento 1: directo (funciona en localhost o mismo dominio)
+  try {
+    const r = await fetch(url);
+    if (r.ok) return await r.json();
+  } catch(e) { /* CORS — intento con proxy */ }
+  // Intento 2: via corsproxy.io
+  const proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
+  const r = await fetch(proxy);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return await r.json();
+}
+
 // ── Carga de datos desde Argly (fuente: BCRA + INDEC) ──
 async function loadData() {
   const err = document.getElementById('errorMsg');
   const btn = document.querySelector('.btn');
+  const src = document.getElementById('dataSource');
   btn.textContent = 'Cargando datos...';
   btn.disabled = true;
+  err.style.display = 'none';
 
   try {
-    // ICL: serie diaria BCRA via Argly — pedir desde 2 años atras
     const now = new Date();
     const desde = `${now.getFullYear()-2}-01-01`;
     const hasta = `${now.getFullYear()}-12-31`;
-    const [iclRes, ipcRes] = await Promise.all([
-      fetch(`https://api.argly.com.ar/v1/icl?desde=${desde}&hasta=${hasta}`),
-      fetch(`https://api.argly.com.ar/v1/ipc?desde=${now.getFullYear()-2}-01&hasta=${now.getFullYear()}-12`)
+
+    const [iclJson, ipcJson] = await Promise.all([
+      fetchArgly(`https://api.argly.com.ar/v1/icl?desde=${desde}&hasta=${hasta}`),
+      fetchArgly(`https://api.argly.com.ar/v1/ipc?desde=${now.getFullYear()-2}-01&hasta=${now.getFullYear()}-12`)
     ]);
 
-    if (!iclRes.ok || !ipcRes.ok) throw new Error('Error al consultar Argly');
-
-    const iclJson = await iclRes.json();
-    const ipcJson = await ipcRes.json();
-
-    // Procesar ICL: quedarnos solo con el valor del día 1 de cada mes
+    // ICL: valor del día 1 de cada mes
     iclData = {};
     for (const d of iclJson.data) {
-      // formato fecha: "DD/MM/YYYY"
       const [dd, mm, yyyy] = d.fecha.split('/');
-      if (dd === '01') {
-        const ym = `${yyyy}-${mm}`;
-        iclData[ym] = parseFloat(d.valor);
-      }
+      if (dd === '01') iclData[`${yyyy}-${mm}`] = parseFloat(d.valor);
     }
 
-    // Procesar IPC: construir indice acumulado desde dic año-3 = 100
+    // IPC: variaciones → indice acumulado
     const ipcVar = {};
     for (const d of ipcJson.data) {
-      const ym = `${d.anio}-${String(d.mes).padStart(2,'0')}`;
-      ipcVar[ym] = d.valor / 100; // 20.6 → 0.206
+      ipcVar[`${d.anio}-${String(d.mes).padStart(2,'0')}`] = d.valor / 100;
     }
-    // Base: mes anterior al primer dato
-    const firstIpc = Object.keys(ipcVar).sort()[0];
-    if (firstIpc) {
-      const baseYm = subM(firstIpc, 1);
-      ipcIndex = {};
-      ipcIndex[baseYm] = 100;
-      for (const m of Object.keys(ipcVar).sort()) {
-        const prev = subM(m, 1);
-        if (ipcIndex[prev] != null) ipcIndex[m] = ipcIndex[prev] * (1 + ipcVar[m]);
-      }
-    }
+    ipcIndex = buildIpcIndex(ipcVar);
 
     dataReady = true;
     btn.textContent = 'Calcular';
     btn.disabled = false;
+    btn.onclick = calculate;
 
-    // Auto-calcular
+    if (src) { src.textContent = '✓ Datos en vivo via Argly (BCRA + INDEC)'; src.style.color = '#16a34a'; }
+
     document.getElementById('refDate').value = getNextMonthFirst();
     calculate();
 
   } catch (e) {
-    err.textContent = 'No se pudieron cargar los datos de Argly. Verifica tu conexion a internet. (' + e.message + ')';
-    err.style.display = 'block';
     btn.textContent = 'Reintentar';
     btn.disabled = false;
     btn.onclick = loadData;
+    err.textContent = 'No se pudieron obtener los datos. Verifica tu conexion a internet y volve a intentar.';
+    err.style.display = 'block';
+    if (src) { src.textContent = ''; }
   }
 }
 
