@@ -345,67 +345,151 @@ def update_icl():
 #  IPC — Indice de Precios al Consumidor (INDEC)
 # ══════════════════════════════════════════════════════════
 
-def fetch_ipc():
-    """Obtiene IPC Nivel General Nacional desde datos.gob.ar."""
-    results = []
-    url_abs = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&limit=5000&format=json"
-    print(f"  IPC absoluto: consultando datos.gob.ar")
+MESES_NOMBRE = [
+    "", "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+]
+MESES_MAP = {v: k for k, v in enumerate(MESES_NOMBRE) if v}
+
+
+def fetch_ipc_datosgob():
+    """
+    Fuente 1: datos.gob.ar — historico completo de variaciones porcentuales.
+    Devuelve dict {yyyy-mm: variacion_pct} con variaciones mensuales.
+    """
+    results = {}
+    url = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&limit=5000&format=json&representation_mode=percent_change"
+    print("  IPC datos.gob.ar: consultando variaciones...")
     try:
-        r = requests.get(url_abs, headers=HEADERS, timeout=30)
+        r = requests.get(url, headers=HEADERS, timeout=30)
         r.raise_for_status()
         data = r.json()
-        series = data.get("data", [])
-
-        url_pct = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&limit=5000&format=json&representation_mode=percent_change"
-        r2 = requests.get(url_pct, headers=HEADERS, timeout=30)
-        r2.raise_for_status()
-        pct_data = r2.json()
-        pct_map = {}
-        for entry in pct_data.get("data", []):
+        for entry in data.get("data", []):
             if entry[1] is not None:
-                pct_map[entry[0]] = round(entry[1] * 100, 2)
-
-        MESES = [
-            "", "enero", "febrero", "marzo", "abril", "mayo", "junio",
-            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-        ]
-
-        for entry in series:
-            fecha_str = entry[0]
-            valor = entry[1]
-            if valor is None:
-                continue
-            y, m, _ = fecha_str.split("-")
-            mes_num = int(m)
-            results.append({
-                "fecha": fecha_str[:7],
-                "anio": int(y),
-                "mes": mes_num,
-                "nombre_mes": MESES[mes_num],
-                "indice_ipc": round(valor, 2),
-                "variacion_pct": pct_map.get(fecha_str)
-            })
-
-        print(f"  IPC: {len(results)} meses obtenidos")
+                fecha = entry[0][:7]  # "2017-01"
+                results[fecha] = round(entry[1] * 100, 2)  # como porcentaje
+        print(f"  IPC datos.gob.ar: {len(results)} meses")
     except Exception as e:
-        print(f"  IPC error: {e}")
+        print(f"  IPC datos.gob.ar error: {e}")
     return results
 
 
+def fetch_ipc_indec():
+    """
+    Fuente 2: scraping directo del INDEC (como hace Argly).
+    URL: https://www.indec.gob.ar/Nivel4/Tema/3/5/31
+    Devuelve dict con el ultimo dato: {yyyy-mm: variacion_pct} o {} si falla.
+    """
+    import re
+    url = "https://www.indec.gob.ar/Nivel4/Tema/3/5/31"
+    print("  IPC INDEC directo: scrapeando...")
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        html = r.text
+
+        # Extraer variacion: "variación de X,X%"
+        match_var = re.search(r"variación de ([\d,]+)%", html)
+        if not match_var:
+            print("  IPC INDEC: no se encontro variacion en el HTML")
+            return {}
+        variacion = float(match_var.group(1).replace(",", "."))
+
+        # Extraer mes: "registró en abril"
+        match_mes = re.search(r"registró en ([a-záéíóúñ]+)", html, re.IGNORECASE)
+        if not match_mes:
+            print("  IPC INDEC: no se encontro mes")
+            return {}
+        mes_nombre = match_mes.group(1).lower()
+        mes_num = MESES_MAP.get(mes_nombre)
+        if not mes_num:
+            print(f"  IPC INDEC: mes '{mes_nombre}' no reconocido")
+            return {}
+
+        # Extraer anio de la fecha de publicacion: "dd/mm/yy"
+        match_fecha = re.search(r'card-titulo3.*?(\d{1,2}/\d{1,2}/(\d{2}))', html, re.DOTALL)
+        if match_fecha:
+            anio_pub = 2000 + int(match_fecha.group(2))
+            # Si el mes es diciembre, el dato es del anio anterior
+            anio = anio_pub - 1 if mes_num == 12 else anio_pub
+        else:
+            # Fallback: usar anio actual
+            anio = datetime.now().year
+            if mes_num == 12:
+                anio -= 1
+
+        fecha = f"{anio}-{mes_num:02d}"
+        print(f"  IPC INDEC: {mes_nombre} {anio} = {variacion}%")
+        return {fecha: variacion}
+
+    except Exception as e:
+        print(f"  IPC INDEC error: {e}")
+        return {}
+
+
 def update_ipc():
-    """Actualiza ipc.json con datos frescos."""
+    """
+    Actualiza ipc.json combinando datos.gob.ar (historico) + INDEC directo (ultimo dato).
+    Guarda variaciones porcentuales mensuales y un indice acumulado base 100.
+    """
     print("\n═══ Actualizando IPC ═══")
-    ipc_data = fetch_ipc()
-    if not ipc_data:
-        print("  Sin datos IPC, manteniendo archivo existente")
-        existing = load_existing(IPC_FILE)
+
+    # Cargar existente para mergear
+    existing = load_existing(IPC_FILE)
+    by_month = {}
+    for entry in existing.get("data", []):
+        by_month[entry["fecha"]] = entry.get("variacion_pct")
+
+    # Fuente 1: datos.gob.ar (historico completo)
+    datosgob = fetch_ipc_datosgob()
+    for fecha, var in datosgob.items():
+        by_month[fecha] = var
+
+    # Fuente 2: INDEC directo (ultimo dato, puede ser mas reciente)
+    indec = fetch_ipc_indec()
+    for fecha, var in indec.items():
+        if fecha not in by_month:
+            print(f"  IPC: dato nuevo del INDEC: {fecha} = {var}%")
+        by_month[fecha] = var
+
+    if not by_month:
+        print("  Sin datos IPC")
         return len(existing.get("data", []))
+
+    # Construir indice acumulado base 100
+    sorted_months = sorted(by_month.keys())
+    indice_acum = {}
+    prev_val = 100.0
+    # El primer mes no tiene "anterior", arranca en 100
+    for m in sorted_months:
+        var = by_month[m]
+        if var is not None:
+            prev_val = prev_val * (1 + var / 100)
+        indice_acum[m] = round(prev_val, 2)
+
+    # Armar data final
+    ipc_data = []
+    for m in sorted_months:
+        y, mm = m.split("-")
+        mes_num = int(mm)
+        ipc_data.append({
+            "fecha": m,
+            "anio": int(y),
+            "mes": mes_num,
+            "nombre_mes": MESES_NOMBRE[mes_num],
+            "indice_ipc": indice_acum[m],
+            "variacion_pct": by_month[m]
+        })
+
+    print(f"  IPC total: {len(ipc_data)} meses")
+    if ipc_data:
+        last = ipc_data[-1]
+        print(f"  Ultimo: {last['nombre_mes']} {last['anio']} = {last['variacion_pct']}% (indice: {last['indice_ipc']})")
 
     result = {
         "meta": {
-            "fuente": "INDEC via datos.gob.ar",
-            "serie": "148.3_INIVELNAL_DICI_M_26",
-            "descripcion": "IPC Nivel General Nacional, base dic 2016 = 100",
+            "fuente": "INDEC (directo + datos.gob.ar)",
+            "descripcion": "IPC Nivel General Nacional, variaciones mensuales + indice acumulado base 100",
             "frecuencia": "mensual",
             "ultima_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
