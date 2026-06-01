@@ -109,8 +109,8 @@
     </div>
     <div class="error-banner" id="errorMsg"></div>
     <div class="grid-3">
-      <div class="section"><div class="section-head"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> ICL</h2><span class="badge badge-blue">BCRA</span></div><table class="idx-table" id="iclTable"><thead><tr><th>Periodo</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variacion</th></tr></thead><tbody></tbody></table></div>
-      <div class="section green"><div class="section-head"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> IPC</h2><span class="badge badge-green">INDEC</span></div><table class="idx-table" id="ipcTable"><thead><tr><th>Periodo</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variacion</th></tr></thead><tbody></tbody></table></div>
+      <div class="section"><div class="section-head"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> ICL</h2><span class="badge badge-blue">BCRA · DIARIO</span></div><table class="idx-table" id="iclTable"><thead><tr><th>Periodo</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variacion</th></tr></thead><tbody></tbody></table></div>
+      <div class="section green"><div class="section-head"><h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> IPC Nivel General</h2><span class="badge badge-green">INDEC · MENSUAL</span></div><table class="idx-table" id="ipcTable"><thead><tr><th>Periodo</th><th class="r">Rango</th><th class="r">Valores</th><th class="r">Variacion</th></tr></thead><tbody></tbody></table></div>
     </div>
 
     <!-- ── SCREENSHOT CARD ── -->
@@ -128,18 +128,18 @@
           <div class="ss-col" id="ssIcl"><div class="ss-col-head">ICL · BCRA</div></div>
           <div class="ss-col" id="ssIpc"><div class="ss-col-head">IPC · INDEC</div></div>
         </div>
-        <div class="ss-footer">Fuentes: BCRA serie 7988 · INDEC IPC Nivel General</div>
+        <div class="ss-footer">Fuentes: BCRA — ICL serie 7988 · INDEC — IPC Nacional</div>
       </div>
     </div>
 
     <div class="footer-note">
-      <div id="dataSource" style="font-size:12px;font-weight:600;margin-bottom:6px"></div>
-      Datos: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA</a> serie 7988 · <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC</a> IPC Nivel General · Actualización automática diaria
+      Fuentes: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA</a> — ICL serie 7988 · <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC</a> — IPC Nacional
+      <br>IPC calculado con valores oficiales acumulados (ultimo dato publicado).
+      <div id="dataSource" style="font-size:12px;font-weight:600;margin-top:6px"></div>
     </div>
   </div>
 </div>
 <script>
-// ── Estado global ──
 let iclData = {};
 let ipcIndex = {};
 let dataReady = false;
@@ -149,36 +149,16 @@ const MNU=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DI
 function fmtMY(ym){const[y,m]=ym.split('-');return MN[+m-1]+'-'+y.slice(2)}
 function fmtMYup(ym){const[y,m]=ym.split('-');return MNU[+m-1]+' '+y}
 function subM(ym,n){const[y,m]=[+ym.split('-')[0],+ym.split('-')[1]];let ny=y,nm=m-n;while(nm<1){nm+=12;ny--}return`${ny}-${String(nm).padStart(2,'0')}`}
-function getNextMonthFirst(){const n=new Date;let y=n.getFullYear(),m=n.getMonth()+2;if(m>12){m=1;y++}return`${y}-${String(m).padStart(2,'0')}-01`}
 function row(l,r,vals,p,c){return`<tr><td class="period-name">${l}</td><td class="range-cell">${r}</td><td class="vals-cell">${vals}</td><td class="pct-cell ${c}">${p}</td></tr>`}
 function ssRow(l,v){return`<div class="ss-row"><span class="ss-row-label">${l}</span><span class="ss-row-val">${v}</span></div>`}
 
-function buildIpcIndex(ipcEntries) {
-  // Recibe array de {fecha: "2017-01", indice_ipc: 123.45, variacion_pct: 1.3, ...}
-  // Usa indice_ipc directamente (valor absoluto del INDEC)
-  const idx = {};
-  for (const entry of ipcEntries) {
-    idx[entry.fecha] = entry.indice_ipc;
-  }
-  return idx;
-}
-
-// ── Determinar base URL para los JSONs ──
 function getBaseUrl() {
-  // Si estamos en GitHub Pages o un servidor, los JSON estan en data/ relativo
-  // Si estamos en file://, intentamos igual (puede fallar por CORS local)
   const loc = window.location;
-  if (loc.protocol === 'file:') {
-    // Para desarrollo local, se puede levantar con python -m http.server
-    return 'data/';
-  }
-  // En GitHub Pages: mismo directorio
+  if (loc.protocol === 'file:') return 'data/';
   const path = loc.pathname;
-  const dir = path.substring(0, path.lastIndexOf('/') + 1);
-  return dir + 'data/';
+  return path.substring(0, path.lastIndexOf('/') + 1) + 'data/';
 }
 
-// ── Carga de datos desde JSONs locales (mismo repo) ──
 async function loadData() {
   const err = document.getElementById('errorMsg');
   const btn = document.querySelector('.btn');
@@ -194,35 +174,34 @@ async function loadData() {
       fetch(base + 'ipc.json').then(r => { if (!r.ok) throw new Error('IPC: HTTP ' + r.status); return r.json(); })
     ]);
 
-    // ICL: valor del dia 1 de cada mes (formato fecha: "dd/mm/yyyy")
+    // ICL: valor del dia 1 de cada mes
     iclData = {};
     for (const d of iclJson.data) {
       const [dd, mm, yyyy] = d.fecha.split('/');
       if (dd === '01') iclData[`${yyyy}-${mm}`] = parseFloat(d.valor);
     }
 
-    // IPC: usar indice absoluto directamente
-    ipcIndex = buildIpcIndex(ipcJson.data);
+    // IPC: indice absoluto por mes (datos.gob.ar)
+    ipcIndex = {};
+    for (const d of ipcJson.data) {
+      ipcIndex[d.fecha] = d.indice_ipc;
+    }
 
     dataReady = true;
     btn.textContent = 'Calcular';
     btn.disabled = false;
     btn.onclick = calculate;
 
-    // Mostrar info de actualizacion
-    const iclMeta = iclJson.meta || {};
-    const lastUpdate = iclMeta.ultima_actualizacion || '';
+    const lastUpdate = (iclJson.meta || {}).ultima_actualizacion || '';
     if (src) {
-      src.textContent = '✓ Datos BCRA + INDEC' + (lastUpdate ? ' · Ult. actualización: ' + lastUpdate.slice(0,10) : '');
+      src.textContent = '✓ Datos BCRA + INDEC' + (lastUpdate ? ' · Ult. actualizacion: ' + lastUpdate.slice(0,10) : '');
       src.style.color = '#16a34a';
     }
 
-    // Fecha default: el ultimo mes con dato ICL disponible
+    // Fecha default: ultimo mes con dato ICL dia 1
     const lastIcl = Object.keys(iclData).sort().pop();
     if (lastIcl) {
       document.getElementById('refDate').value = lastIcl + '-01';
-    } else {
-      document.getElementById('refDate').value = getNextMonthFirst();
     }
     calculate();
 
@@ -231,9 +210,9 @@ async function loadData() {
     btn.textContent = 'Reintentar';
     btn.disabled = false;
     btn.onclick = loadData;
-    err.textContent = 'No se pudieron cargar los datos (' + e.message + '). Verifica que los archivos data/icl.json y data/ipc.json existan.';
+    err.textContent = 'No se pudieron cargar los datos (' + e.message + ').';
     err.style.display = 'block';
-    if (src) { src.textContent = ''; }
+    if (src) src.textContent = '';
   }
 }
 
@@ -250,7 +229,7 @@ function calculate() {
   const P = [{l:'Anual',m:12},{l:'Semestral',m:6},{l:'Cuatrimestral',m:4},{l:'Trimestral',m:3}];
   let es = [];
 
-  // ICL
+  // ── ICL ──
   const ib = document.querySelector('#iclTable tbody'); ib.innerHTML = '';
   const ssIcl = document.getElementById('ssIcl'); ssIcl.innerHTML = '<div class="ss-col-head">ICL · BCRA</div>';
   for (const p of P) {
@@ -264,14 +243,12 @@ function calculate() {
     } else { ib.innerHTML += row(p.l,'—','—','sin dato','pct-red'); ssIcl.innerHTML += ssRow(p.l,'—'); }
   }
 
-  // IPC (con ~2 meses de delay)
+  // ── IPC: usar ultimo dato disponible ──
   const jb = document.querySelector('#ipcTable tbody'); jb.innerHTML = '';
   const ssIpc = document.getElementById('ssIpc'); ssIpc.innerHTML = '<div class="ss-col-head">IPC · INDEC</div>';
   const ipcKeys = Object.keys(ipcIndex).sort();
-  const ipcRef = subM(ym, 2);
-  let latestIpc = null;
-  for (const k of ipcKeys) { if (k <= ipcRef) latestIpc = k; }
-  if (!latestIpc) latestIpc = ipcKeys[ipcKeys.length - 1];
+  // Ultimo dato disponible (sin restar meses)
+  const latestIpc = ipcKeys[ipcKeys.length - 1];
   for (const p of P) {
     const ek = latestIpc, sk = subM(ek, p.m);
     const ev = ipcIndex[ek], sv = ipcIndex[sk];
@@ -285,7 +262,6 @@ function calculate() {
   if (es.length) { err.innerHTML = [...new Set(es)].join('<br>'); err.style.display = 'block'; }
 }
 
-// ── Arranque ──
 loadData();
 </script>
 </body>
