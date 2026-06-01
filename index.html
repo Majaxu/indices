@@ -248,7 +248,10 @@ function calculate() {
   const ssIpc = document.getElementById('ssIpc'); ssIpc.innerHTML = '<div class="ss-col-head">IPC · INDEC</div>';
   const ipcKeys = Object.keys(ipcIndex).sort();
   // Ultimo dato disponible (sin restar meses)
-  const latestIpc = ipcKeys[ipcKeys.length - 1];
+  const ipcRef = subM(ym, 2);
+  let latestIpc = null;
+  for (const k of ipcKeys) { if (k <= ipcRef) latestIpc = k; }
+  if (!latestIpc) latestIpc = ipcKeys[ipcKeys.length - 1];
   for (const p of P) {
     const ek = latestIpc, sk = subM(ek, p.m);
     const ev = ipcIndex[ek], sv = ipcIndex[sk];
