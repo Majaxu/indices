@@ -1,211 +1,207 @@
 {
   "meta": {
-    "fuente": "INDEC via datos.gob.ar",
-    "serie": "148.3_INIVELNAL_DICI_M_26",
-    "descripcion": "IPC Nivel General Nacional, base dic 2016 = 100",
+    "fuente": "INDEC via datos.gob.ar (variaciones redondeadas = boletin oficial)",
+    "serie": "145.3_INGNACUAL_DICI_M_38",
+    "descripcion": "IPC Nivel General Nacional, variaciones acumuladas base 100",
     "frecuencia": "mensual",
-    "ultima_actualizacion": "2026-06-01 15:59:53"
+    "ultima_actualizacion": "2026-06-01 16:36:01"
   },
   "data": [
     {
-      "fecha": "2016-12",
-      "indice_ipc": 100.0
-    },
-    {
       "fecha": "2017-01",
-      "indice_ipc": 101.59
+      "indice_ipc": 101.6
     },
     {
       "fecha": "2017-02",
-      "indice_ipc": 103.69
+      "indice_ipc": 103.73
     },
     {
       "fecha": "2017-03",
-      "indice_ipc": 106.15
+      "indice_ipc": 106.22
     },
     {
       "fecha": "2017-04",
-      "indice_ipc": 108.97
+      "indice_ipc": 109.09
     },
     {
       "fecha": "2017-05",
-      "indice_ipc": 110.53
+      "indice_ipc": 110.62
     },
     {
       "fecha": "2017-06",
-      "indice_ipc": 111.85
+      "indice_ipc": 111.95
     },
     {
       "fecha": "2017-07",
-      "indice_ipc": 113.79
+      "indice_ipc": 113.85
     },
     {
       "fecha": "2017-08",
-      "indice_ipc": 115.38
+      "indice_ipc": 115.44
     },
     {
       "fecha": "2017-09",
-      "indice_ipc": 117.57
+      "indice_ipc": 117.64
     },
     {
       "fecha": "2017-10",
-      "indice_ipc": 119.35
+      "indice_ipc": 119.4
     },
     {
       "fecha": "2017-11",
-      "indice_ipc": 120.99
+      "indice_ipc": 121.07
     },
     {
       "fecha": "2017-12",
-      "indice_ipc": 124.8
+      "indice_ipc": 124.83
     },
     {
       "fecha": "2018-01",
-      "indice_ipc": 126.99
+      "indice_ipc": 127.07
     },
     {
       "fecha": "2018-02",
-      "indice_ipc": 130.06
+      "indice_ipc": 130.12
     },
     {
       "fecha": "2018-03",
-      "indice_ipc": 133.11
+      "indice_ipc": 133.12
     },
     {
       "fecha": "2018-04",
-      "indice_ipc": 136.75
+      "indice_ipc": 136.71
     },
     {
       "fecha": "2018-05",
-      "indice_ipc": 139.59
+      "indice_ipc": 139.58
     },
     {
       "fecha": "2018-06",
-      "indice_ipc": 144.81
+      "indice_ipc": 144.74
     },
     {
       "fecha": "2018-07",
-      "indice_ipc": 149.3
+      "indice_ipc": 149.23
     },
     {
       "fecha": "2018-08",
-      "indice_ipc": 155.1
+      "indice_ipc": 155.05
     },
     {
       "fecha": "2018-09",
-      "indice_ipc": 165.24
+      "indice_ipc": 165.13
     },
     {
       "fecha": "2018-10",
-      "indice_ipc": 174.15
+      "indice_ipc": 174.05
     },
     {
       "fecha": "2018-11",
-      "indice_ipc": 179.64
+      "indice_ipc": 179.62
     },
     {
       "fecha": "2018-12",
-      "indice_ipc": 184.26
+      "indice_ipc": 184.29
     },
     {
       "fecha": "2019-01",
-      "indice_ipc": 189.61
+      "indice_ipc": 189.63
     },
     {
       "fecha": "2019-02",
-      "indice_ipc": 196.75
+      "indice_ipc": 196.84
     },
     {
       "fecha": "2019-03",
-      "indice_ipc": 205.96
+      "indice_ipc": 206.09
     },
     {
       "fecha": "2019-04",
-      "indice_ipc": 212.96
+      "indice_ipc": 213.1
     },
     {
       "fecha": "2019-05",
-      "indice_ipc": 219.57
+      "indice_ipc": 219.7
     },
     {
       "fecha": "2019-06",
-      "indice_ipc": 225.54
+      "indice_ipc": 225.63
     },
     {
       "fecha": "2019-07",
-      "indice_ipc": 230.49
+      "indice_ipc": 230.6
     },
     {
       "fecha": "2019-08",
-      "indice_ipc": 239.61
+      "indice_ipc": 239.82
     },
     {
       "fecha": "2019-09",
-      "indice_ipc": 253.71
+      "indice_ipc": 253.97
     },
     {
       "fecha": "2019-10",
-      "indice_ipc": 262.07
+      "indice_ipc": 262.35
     },
     {
       "fecha": "2019-11",
-      "indice_ipc": 273.22
+      "indice_ipc": 273.63
     },
     {
       "fecha": "2019-12",
-      "indice_ipc": 283.44
+      "indice_ipc": 283.76
     },
     {
       "fecha": "2020-01",
-      "indice_ipc": 289.83
+      "indice_ipc": 290.28
     },
     {
       "fecha": "2020-02",
-      "indice_ipc": 295.67
+      "indice_ipc": 296.09
     },
     {
       "fecha": "2020-03",
-      "indice_ipc": 305.55
+      "indice_ipc": 305.86
     },
     {
       "fecha": "2020-04",
-      "indice_ipc": 310.12
+      "indice_ipc": 310.45
     },
     {
       "fecha": "2020-05",
-      "indice_ipc": 314.91
+      "indice_ipc": 315.1
     },
     {
       "fecha": "2020-06",
-      "indice_ipc": 321.97
+      "indice_ipc": 322.04
     },
     {
       "fecha": "2020-07",
-      "indice_ipc": 328.2
+      "indice_ipc": 328.16
     },
     {
       "fecha": "2020-08",
-      "indice_ipc": 337.06
+      "indice_ipc": 337.02
     },
     {
       "fecha": "2020-09",
-      "indice_ipc": 346.62
+      "indice_ipc": 346.45
     },
     {
       "fecha": "2020-10",
-      "indice_ipc": 359.66
+      "indice_ipc": 359.62
     },
     {
       "fecha": "2020-11",
-      "indice_ipc": 371.02
+      "indice_ipc": 371.13
     },
     {
       "fecha": "2020-12",
-      "indice_ipc": 385.88
+      "indice_ipc": 385.97
     },
     {
       "fecha": "2021-01",
-      "indice_ipc": 401.51
+      "indice_ipc": 401.41
     },
     {
       "fecha": "2021-02",
@@ -213,251 +209,251 @@
     },
     {
       "fecha": "2021-03",
-      "indice_ipc": 435.87
+      "indice_ipc": 435.82
     },
     {
       "fecha": "2021-04",
-      "indice_ipc": 453.65
+      "indice_ipc": 453.69
     },
     {
       "fecha": "2021-05",
-      "indice_ipc": 468.73
+      "indice_ipc": 468.66
     },
     {
       "fecha": "2021-06",
-      "indice_ipc": 483.6
+      "indice_ipc": 483.66
     },
     {
       "fecha": "2021-07",
-      "indice_ipc": 498.1
+      "indice_ipc": 498.17
     },
     {
       "fecha": "2021-08",
-      "indice_ipc": 510.39
+      "indice_ipc": 510.62
     },
     {
       "fecha": "2021-09",
-      "indice_ipc": 528.5
+      "indice_ipc": 528.49
     },
     {
       "fecha": "2021-10",
-      "indice_ipc": 547.08
+      "indice_ipc": 546.99
     },
     {
       "fecha": "2021-11",
-      "indice_ipc": 560.92
+      "indice_ipc": 560.67
     },
     {
       "fecha": "2021-12",
-      "indice_ipc": 582.46
+      "indice_ipc": 581.97
     },
     {
       "fecha": "2022-01",
-      "indice_ipc": 605.03
+      "indice_ipc": 604.67
     },
     {
       "fecha": "2022-02",
-      "indice_ipc": 633.43
+      "indice_ipc": 633.09
     },
     {
       "fecha": "2022-03",
-      "indice_ipc": 676.06
+      "indice_ipc": 675.5
     },
     {
       "fecha": "2022-04",
-      "indice_ipc": 716.94
+      "indice_ipc": 716.04
     },
     {
       "fecha": "2022-05",
-      "indice_ipc": 753.15
+      "indice_ipc": 752.55
     },
     {
       "fecha": "2022-06",
-      "indice_ipc": 793.03
+      "indice_ipc": 792.44
     },
     {
       "fecha": "2022-07",
-      "indice_ipc": 851.76
+      "indice_ipc": 851.08
     },
     {
       "fecha": "2022-08",
-      "indice_ipc": 911.13
+      "indice_ipc": 910.65
     },
     {
       "fecha": "2022-09",
-      "indice_ipc": 967.31
+      "indice_ipc": 967.11
     },
     {
       "fecha": "2022-10",
-      "indice_ipc": 1028.71
+      "indice_ipc": 1028.04
     },
     {
       "fecha": "2022-11",
-      "indice_ipc": 1079.28
+      "indice_ipc": 1078.42
     },
     {
       "fecha": "2022-12",
-      "indice_ipc": 1134.59
+      "indice_ipc": 1133.42
     },
     {
       "fecha": "2023-01",
-      "indice_ipc": 1202.98
+      "indice_ipc": 1201.42
     },
     {
       "fecha": "2023-02",
-      "indice_ipc": 1282.71
+      "indice_ipc": 1280.72
     },
     {
       "fecha": "2023-03",
-      "indice_ipc": 1381.16
+      "indice_ipc": 1379.33
     },
     {
       "fecha": "2023-04",
-      "indice_ipc": 1497.21
+      "indice_ipc": 1495.19
     },
     {
       "fecha": "2023-05",
-      "indice_ipc": 1613.59
+      "indice_ipc": 1611.82
     },
     {
       "fecha": "2023-06",
-      "indice_ipc": 1709.61
+      "indice_ipc": 1708.53
     },
     {
       "fecha": "2023-07",
-      "indice_ipc": 1818.08
+      "indice_ipc": 1816.17
     },
     {
       "fecha": "2023-08",
-      "indice_ipc": 2044.28
+      "indice_ipc": 2041.37
     },
     {
       "fecha": "2023-09",
-      "indice_ipc": 2304.92
+      "indice_ipc": 2300.62
     },
     {
       "fecha": "2023-10",
-      "indice_ipc": 2496.27
+      "indice_ipc": 2491.58
     },
     {
       "fecha": "2023-11",
-      "indice_ipc": 2816.06
+      "indice_ipc": 2810.5
     },
     {
       "fecha": "2023-12",
-      "indice_ipc": 3533.19
+      "indice_ipc": 3527.17
     },
     {
       "fecha": "2024-01",
-      "indice_ipc": 4261.53
+      "indice_ipc": 4253.77
     },
     {
       "fecha": "2024-02",
-      "indice_ipc": 4825.79
+      "indice_ipc": 4815.27
     },
     {
       "fecha": "2024-03",
-      "indice_ipc": 5357.09
+      "indice_ipc": 5344.95
     },
     {
       "fecha": "2024-04",
-      "indice_ipc": 5830.23
+      "indice_ipc": 5815.31
     },
     {
       "fecha": "2024-05",
-      "indice_ipc": 6073.7
+      "indice_ipc": 6059.55
     },
     {
       "fecha": "2024-06",
-      "indice_ipc": 6351.71
+      "indice_ipc": 6338.29
     },
     {
       "fecha": "2024-07",
-      "indice_ipc": 6607.75
+      "indice_ipc": 6591.82
     },
     {
       "fecha": "2024-08",
-      "indice_ipc": 6883.44
+      "indice_ipc": 6868.68
     },
     {
       "fecha": "2024-09",
-      "indice_ipc": 7122.24
+      "indice_ipc": 7109.08
     },
     {
       "fecha": "2024-10",
-      "indice_ipc": 7313.95
+      "indice_ipc": 7301.03
     },
     {
       "fecha": "2024-11",
-      "indice_ipc": 7491.43
+      "indice_ipc": 7476.25
     },
     {
       "fecha": "2024-12",
-      "indice_ipc": 7694.01
+      "indice_ipc": 7678.11
     },
     {
       "fecha": "2025-01",
-      "indice_ipc": 7864.13
+      "indice_ipc": 7847.03
     },
     {
       "fecha": "2025-02",
-      "indice_ipc": 8052.99
+      "indice_ipc": 8035.36
     },
     {
       "fecha": "2025-03",
-      "indice_ipc": 8353.32
+      "indice_ipc": 8332.66
     },
     {
       "fecha": "2025-04",
-      "indice_ipc": 8585.61
+      "indice_ipc": 8565.98
     },
     {
       "fecha": "2025-05",
-      "indice_ipc": 8714.49
+      "indice_ipc": 8694.47
     },
     {
       "fecha": "2025-06",
-      "indice_ipc": 8855.57
+      "indice_ipc": 8833.58
     },
     {
       "fecha": "2025-07",
-      "indice_ipc": 9023.97
+      "indice_ipc": 9001.42
     },
     {
       "fecha": "2025-08",
-      "indice_ipc": 9193.24
+      "indice_ipc": 9172.44
     },
     {
       "fecha": "2025-09",
-      "indice_ipc": 9384.09
+      "indice_ipc": 9365.07
     },
     {
       "fecha": "2025-10",
-      "indice_ipc": 9603.86
+      "indice_ipc": 9580.46
     },
     {
       "fecha": "2025-11",
-      "indice_ipc": 9841.36
+      "indice_ipc": 9819.97
     },
     {
       "fecha": "2025-12",
-      "indice_ipc": 10121.37
+      "indice_ipc": 10094.93
     },
     {
       "fecha": "2026-01",
-      "indice_ipc": 10413.03
+      "indice_ipc": 10387.69
     },
     {
       "fecha": "2026-02",
-      "indice_ipc": 10714.63
+      "indice_ipc": 10688.93
     },
     {
       "fecha": "2026-03",
-      "indice_ipc": 11077.06
+      "indice_ipc": 11052.35
     },
     {
       "fecha": "2026-04",
-      "indice_ipc": 11363.09
+      "indice_ipc": 11339.71
     }
   ]
 }
