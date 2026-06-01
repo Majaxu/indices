@@ -1,10 +1,9 @@
 {
   "meta": {
-    "fuente": "INDEC via datos.gob.ar",
-    "serie": "148.3_INIVELNAL_DICI_M_26",
-    "descripcion": "IPC Nivel General Nacional, base dic 2016 = 100",
+    "fuente": "INDEC (directo + datos.gob.ar)",
+    "descripcion": "IPC Nivel General Nacional, variaciones mensuales + indice acumulado base 100",
     "frecuencia": "mensual",
-    "ultima_actualizacion": "2026-05-28 17:39:15"
+    "ultima_actualizacion": "2026-05-29 18:24:57"
   },
   "data": [
     {
@@ -68,7 +67,7 @@
       "anio": 2017,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 113.79,
+      "indice_ipc": 113.78,
       "variacion_pct": 1.73
     },
     {
@@ -92,7 +91,7 @@
       "anio": 2017,
       "mes": 10,
       "nombre_mes": "octubre",
-      "indice_ipc": 119.35,
+      "indice_ipc": 119.34,
       "variacion_pct": 1.51
     },
     {
@@ -108,7 +107,7 @@
       "anio": 2017,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 124.8,
+      "indice_ipc": 124.79,
       "variacion_pct": 3.14
     },
     {
@@ -132,7 +131,7 @@
       "anio": 2018,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 133.11,
+      "indice_ipc": 133.1,
       "variacion_pct": 2.34
     },
     {
@@ -172,7 +171,7 @@
       "anio": 2018,
       "mes": 8,
       "nombre_mes": "agosto",
-      "indice_ipc": 155.1,
+      "indice_ipc": 155.11,
       "variacion_pct": 3.89
     },
     {
@@ -196,7 +195,7 @@
       "anio": 2018,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 179.64,
+      "indice_ipc": 179.63,
       "variacion_pct": 3.15
     },
     {
@@ -204,7 +203,7 @@
       "anio": 2018,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 184.26,
+      "indice_ipc": 184.25,
       "variacion_pct": 2.57
     },
     {
@@ -220,7 +219,7 @@
       "anio": 2019,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 196.75,
+      "indice_ipc": 196.76,
       "variacion_pct": 3.77
     },
     {
@@ -228,7 +227,7 @@
       "anio": 2019,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 205.96,
+      "indice_ipc": 205.97,
       "variacion_pct": 4.68
     },
     {
@@ -236,7 +235,7 @@
       "anio": 2019,
       "mes": 4,
       "nombre_mes": "abril",
-      "indice_ipc": 212.96,
+      "indice_ipc": 212.97,
       "variacion_pct": 3.4
     },
     {
@@ -260,7 +259,7 @@
       "anio": 2019,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 230.49,
+      "indice_ipc": 230.51,
       "variacion_pct": 2.2
     },
     {
@@ -276,7 +275,7 @@
       "anio": 2019,
       "mes": 9,
       "nombre_mes": "septiembre",
-      "indice_ipc": 253.71,
+      "indice_ipc": 253.72,
       "variacion_pct": 5.89
     },
     {
@@ -292,7 +291,7 @@
       "anio": 2019,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 273.22,
+      "indice_ipc": 273.21,
       "variacion_pct": 4.25
     },
     {
@@ -300,7 +299,7 @@
       "anio": 2019,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 283.44,
+      "indice_ipc": 283.43,
       "variacion_pct": 3.74
     },
     {
@@ -308,7 +307,7 @@
       "anio": 2020,
       "mes": 1,
       "nombre_mes": "enero",
-      "indice_ipc": 289.83,
+      "indice_ipc": 289.8,
       "variacion_pct": 2.25
     },
     {
@@ -316,7 +315,7 @@
       "anio": 2020,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 295.67,
+      "indice_ipc": 295.63,
       "variacion_pct": 2.01
     },
     {
@@ -324,7 +323,7 @@
       "anio": 2020,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 305.55,
+      "indice_ipc": 305.5,
       "variacion_pct": 3.34
     },
     {
@@ -332,7 +331,7 @@
       "anio": 2020,
       "mes": 4,
       "nombre_mes": "abril",
-      "indice_ipc": 310.12,
+      "indice_ipc": 310.09,
       "variacion_pct": 1.5
     },
     {
@@ -340,7 +339,7 @@
       "anio": 2020,
       "mes": 5,
       "nombre_mes": "mayo",
-      "indice_ipc": 314.91,
+      "indice_ipc": 314.86,
       "variacion_pct": 1.54
     },
     {
@@ -348,7 +347,7 @@
       "anio": 2020,
       "mes": 6,
       "nombre_mes": "junio",
-      "indice_ipc": 321.97,
+      "indice_ipc": 321.91,
       "variacion_pct": 2.24
     },
     {
@@ -356,7 +355,7 @@
       "anio": 2020,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 328.2,
+      "indice_ipc": 328.13,
       "variacion_pct": 1.93
     },
     {
@@ -364,7 +363,7 @@
       "anio": 2020,
       "mes": 8,
       "nombre_mes": "agosto",
-      "indice_ipc": 337.06,
+      "indice_ipc": 336.99,
       "variacion_pct": 2.7
     },
     {
@@ -372,7 +371,7 @@
       "anio": 2020,
       "mes": 9,
       "nombre_mes": "septiembre",
-      "indice_ipc": 346.62,
+      "indice_ipc": 346.56,
       "variacion_pct": 2.84
     },
     {
@@ -380,7 +379,7 @@
       "anio": 2020,
       "mes": 10,
       "nombre_mes": "octubre",
-      "indice_ipc": 359.66,
+      "indice_ipc": 359.59,
       "variacion_pct": 3.76
     },
     {
@@ -388,7 +387,7 @@
       "anio": 2020,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 371.02,
+      "indice_ipc": 370.95,
       "variacion_pct": 3.16
     },
     {
@@ -396,7 +395,7 @@
       "anio": 2020,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 385.88,
+      "indice_ipc": 385.83,
       "variacion_pct": 4.01
     },
     {
@@ -404,7 +403,7 @@
       "anio": 2021,
       "mes": 1,
       "nombre_mes": "enero",
-      "indice_ipc": 401.51,
+      "indice_ipc": 401.45,
       "variacion_pct": 4.05
     },
     {
@@ -412,7 +411,7 @@
       "anio": 2021,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 415.86,
+      "indice_ipc": 415.78,
       "variacion_pct": 3.57
     },
     {
@@ -420,7 +419,7 @@
       "anio": 2021,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 435.87,
+      "indice_ipc": 435.78,
       "variacion_pct": 4.81
     },
     {
@@ -428,7 +427,7 @@
       "anio": 2021,
       "mes": 4,
       "nombre_mes": "abril",
-      "indice_ipc": 453.65,
+      "indice_ipc": 453.56,
       "variacion_pct": 4.08
     },
     {
@@ -436,7 +435,7 @@
       "anio": 2021,
       "mes": 5,
       "nombre_mes": "mayo",
-      "indice_ipc": 468.73,
+      "indice_ipc": 468.62,
       "variacion_pct": 3.32
     },
     {
@@ -444,7 +443,7 @@
       "anio": 2021,
       "mes": 6,
       "nombre_mes": "junio",
-      "indice_ipc": 483.6,
+      "indice_ipc": 483.48,
       "variacion_pct": 3.17
     },
     {
@@ -452,7 +451,7 @@
       "anio": 2021,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 498.1,
+      "indice_ipc": 497.98,
       "variacion_pct": 3.0
     },
     {
@@ -460,7 +459,7 @@
       "anio": 2021,
       "mes": 8,
       "nombre_mes": "agosto",
-      "indice_ipc": 510.39,
+      "indice_ipc": 510.28,
       "variacion_pct": 2.47
     },
     {
@@ -468,7 +467,7 @@
       "anio": 2021,
       "mes": 9,
       "nombre_mes": "septiembre",
-      "indice_ipc": 528.5,
+      "indice_ipc": 528.4,
       "variacion_pct": 3.55
     },
     {
@@ -476,7 +475,7 @@
       "anio": 2021,
       "mes": 10,
       "nombre_mes": "octubre",
-      "indice_ipc": 547.08,
+      "indice_ipc": 547.0,
       "variacion_pct": 3.52
     },
     {
@@ -484,7 +483,7 @@
       "anio": 2021,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 560.92,
+      "indice_ipc": 560.83,
       "variacion_pct": 2.53
     },
     {
@@ -492,7 +491,7 @@
       "anio": 2021,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 582.46,
+      "indice_ipc": 582.37,
       "variacion_pct": 3.84
     },
     {
@@ -500,7 +499,7 @@
       "anio": 2022,
       "mes": 1,
       "nombre_mes": "enero",
-      "indice_ipc": 605.03,
+      "indice_ipc": 604.97,
       "variacion_pct": 3.88
     },
     {
@@ -508,7 +507,7 @@
       "anio": 2022,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 633.43,
+      "indice_ipc": 633.34,
       "variacion_pct": 4.69
     },
     {
@@ -516,7 +515,7 @@
       "anio": 2022,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 676.06,
+      "indice_ipc": 675.96,
       "variacion_pct": 6.73
     },
     {
@@ -524,7 +523,7 @@
       "anio": 2022,
       "mes": 4,
       "nombre_mes": "abril",
-      "indice_ipc": 716.94,
+      "indice_ipc": 716.86,
       "variacion_pct": 6.05
     },
     {
@@ -532,7 +531,7 @@
       "anio": 2022,
       "mes": 5,
       "nombre_mes": "mayo",
-      "indice_ipc": 753.15,
+      "indice_ipc": 753.06,
       "variacion_pct": 5.05
     },
     {
@@ -540,7 +539,7 @@
       "anio": 2022,
       "mes": 6,
       "nombre_mes": "junio",
-      "indice_ipc": 793.03,
+      "indice_ipc": 792.97,
       "variacion_pct": 5.3
     },
     {
@@ -548,7 +547,7 @@
       "anio": 2022,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 851.76,
+      "indice_ipc": 851.73,
       "variacion_pct": 7.41
     },
     {
@@ -556,7 +555,7 @@
       "anio": 2022,
       "mes": 8,
       "nombre_mes": "agosto",
-      "indice_ipc": 911.13,
+      "indice_ipc": 911.1,
       "variacion_pct": 6.97
     },
     {
@@ -572,7 +571,7 @@
       "anio": 2022,
       "mes": 10,
       "nombre_mes": "octubre",
-      "indice_ipc": 1028.71,
+      "indice_ipc": 1028.74,
       "variacion_pct": 6.35
     },
     {
@@ -580,7 +579,7 @@
       "anio": 2022,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 1079.28,
+      "indice_ipc": 1079.35,
       "variacion_pct": 4.92
     },
     {
@@ -588,7 +587,7 @@
       "anio": 2022,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 1134.59,
+      "indice_ipc": 1134.61,
       "variacion_pct": 5.12
     },
     {
@@ -596,7 +595,7 @@
       "anio": 2023,
       "mes": 1,
       "nombre_mes": "enero",
-      "indice_ipc": 1202.98,
+      "indice_ipc": 1203.03,
       "variacion_pct": 6.03
     },
     {
@@ -604,7 +603,7 @@
       "anio": 2023,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 1282.71,
+      "indice_ipc": 1282.79,
       "variacion_pct": 6.63
     },
     {
@@ -612,7 +611,7 @@
       "anio": 2023,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 1381.16,
+      "indice_ipc": 1381.31,
       "variacion_pct": 7.68
     },
     {
@@ -620,7 +619,7 @@
       "anio": 2023,
       "mes": 4,
       "nombre_mes": "abril",
-      "indice_ipc": 1497.21,
+      "indice_ipc": 1497.34,
       "variacion_pct": 8.4
     },
     {
@@ -628,7 +627,7 @@
       "anio": 2023,
       "mes": 5,
       "nombre_mes": "mayo",
-      "indice_ipc": 1613.59,
+      "indice_ipc": 1613.68,
       "variacion_pct": 7.77
     },
     {
@@ -636,7 +635,7 @@
       "anio": 2023,
       "mes": 6,
       "nombre_mes": "junio",
-      "indice_ipc": 1709.61,
+      "indice_ipc": 1709.7,
       "variacion_pct": 5.95
     },
     {
@@ -644,7 +643,7 @@
       "anio": 2023,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 1818.08,
+      "indice_ipc": 1818.09,
       "variacion_pct": 6.34
     },
     {
@@ -652,7 +651,7 @@
       "anio": 2023,
       "mes": 8,
       "nombre_mes": "agosto",
-      "indice_ipc": 2044.28,
+      "indice_ipc": 2044.26,
       "variacion_pct": 12.44
     },
     {
@@ -660,7 +659,7 @@
       "anio": 2023,
       "mes": 9,
       "nombre_mes": "septiembre",
-      "indice_ipc": 2304.92,
+      "indice_ipc": 2304.9,
       "variacion_pct": 12.75
     },
     {
@@ -668,7 +667,7 @@
       "anio": 2023,
       "mes": 10,
       "nombre_mes": "octubre",
-      "indice_ipc": 2496.27,
+      "indice_ipc": 2496.21,
       "variacion_pct": 8.3
     },
     {
@@ -676,7 +675,7 @@
       "anio": 2023,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 2816.06,
+      "indice_ipc": 2815.98,
       "variacion_pct": 12.81
     },
     {
@@ -684,7 +683,7 @@
       "anio": 2023,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 3533.19,
+      "indice_ipc": 3533.21,
       "variacion_pct": 25.47
     },
     {
@@ -692,7 +691,7 @@
       "anio": 2024,
       "mes": 1,
       "nombre_mes": "enero",
-      "indice_ipc": 4261.53,
+      "indice_ipc": 4261.4,
       "variacion_pct": 20.61
     },
     {
@@ -700,7 +699,7 @@
       "anio": 2024,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 4825.79,
+      "indice_ipc": 4825.61,
       "variacion_pct": 13.24
     },
     {
@@ -708,7 +707,7 @@
       "anio": 2024,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 5357.09,
+      "indice_ipc": 5356.91,
       "variacion_pct": 11.01
     },
     {
@@ -716,7 +715,7 @@
       "anio": 2024,
       "mes": 4,
       "nombre_mes": "abril",
-      "indice_ipc": 5830.23,
+      "indice_ipc": 5829.92,
       "variacion_pct": 8.83
     },
     {
@@ -724,7 +723,7 @@
       "anio": 2024,
       "mes": 5,
       "nombre_mes": "mayo",
-      "indice_ipc": 6073.7,
+      "indice_ipc": 6073.61,
       "variacion_pct": 4.18
     },
     {
@@ -732,7 +731,7 @@
       "anio": 2024,
       "mes": 6,
       "nombre_mes": "junio",
-      "indice_ipc": 6351.71,
+      "indice_ipc": 6351.79,
       "variacion_pct": 4.58
     },
     {
@@ -740,7 +739,7 @@
       "anio": 2024,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 6607.75,
+      "indice_ipc": 6607.76,
       "variacion_pct": 4.03
     },
     {
@@ -748,7 +747,7 @@
       "anio": 2024,
       "mes": 8,
       "nombre_mes": "agosto",
-      "indice_ipc": 6883.44,
+      "indice_ipc": 6883.31,
       "variacion_pct": 4.17
     },
     {
@@ -756,7 +755,7 @@
       "anio": 2024,
       "mes": 9,
       "nombre_mes": "septiembre",
-      "indice_ipc": 7122.24,
+      "indice_ipc": 7122.16,
       "variacion_pct": 3.47
     },
     {
@@ -764,7 +763,7 @@
       "anio": 2024,
       "mes": 10,
       "nombre_mes": "octubre",
-      "indice_ipc": 7313.95,
+      "indice_ipc": 7313.74,
       "variacion_pct": 2.69
     },
     {
@@ -772,7 +771,7 @@
       "anio": 2024,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 7491.43,
+      "indice_ipc": 7491.47,
       "variacion_pct": 2.43
     },
     {
@@ -780,7 +779,7 @@
       "anio": 2024,
       "mes": 12,
       "nombre_mes": "diciembre",
-      "indice_ipc": 7694.01,
+      "indice_ipc": 7693.74,
       "variacion_pct": 2.7
     },
     {
@@ -788,7 +787,7 @@
       "anio": 2025,
       "mes": 1,
       "nombre_mes": "enero",
-      "indice_ipc": 7864.13,
+      "indice_ipc": 7863.77,
       "variacion_pct": 2.21
     },
     {
@@ -796,7 +795,7 @@
       "anio": 2025,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 8052.99,
+      "indice_ipc": 8052.5,
       "variacion_pct": 2.4
     },
     {
@@ -804,7 +803,7 @@
       "anio": 2025,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 8353.32,
+      "indice_ipc": 8352.86,
       "variacion_pct": 3.73
     },
     {
@@ -812,7 +811,7 @@
       "anio": 2025,
       "mes": 4,
       "nombre_mes": "abril",
-      "indice_ipc": 8585.61,
+      "indice_ipc": 8585.07,
       "variacion_pct": 2.78
     },
     {
@@ -820,7 +819,7 @@
       "anio": 2025,
       "mes": 5,
       "nombre_mes": "mayo",
-      "indice_ipc": 8714.49,
+      "indice_ipc": 8713.84,
       "variacion_pct": 1.5
     },
     {
@@ -828,7 +827,7 @@
       "anio": 2025,
       "mes": 6,
       "nombre_mes": "junio",
-      "indice_ipc": 8855.57,
+      "indice_ipc": 8855.01,
       "variacion_pct": 1.62
     },
     {
@@ -836,7 +835,7 @@
       "anio": 2025,
       "mes": 7,
       "nombre_mes": "julio",
-      "indice_ipc": 9023.97,
+      "indice_ipc": 9023.25,
       "variacion_pct": 1.9
     },
     {
@@ -844,7 +843,7 @@
       "anio": 2025,
       "mes": 8,
       "nombre_mes": "agosto",
-      "indice_ipc": 9193.24,
+      "indice_ipc": 9192.89,
       "variacion_pct": 1.88
     },
     {
@@ -852,7 +851,7 @@
       "anio": 2025,
       "mes": 9,
       "nombre_mes": "septiembre",
-      "indice_ipc": 9384.09,
+      "indice_ipc": 9384.1,
       "variacion_pct": 2.08
     },
     {
@@ -860,7 +859,7 @@
       "anio": 2025,
       "mes": 10,
       "nombre_mes": "octubre",
-      "indice_ipc": 9603.86,
+      "indice_ipc": 9603.69,
       "variacion_pct": 2.34
     },
     {
@@ -868,7 +867,7 @@
       "anio": 2025,
       "mes": 11,
       "nombre_mes": "noviembre",
-      "indice_ipc": 9841.36,
+      "indice_ipc": 9840.9,
       "variacion_pct": 2.47
     },
     {
@@ -884,7 +883,7 @@
       "anio": 2026,
       "mes": 1,
       "nombre_mes": "enero",
-      "indice_ipc": 10413.03,
+      "indice_ipc": 10412.86,
       "variacion_pct": 2.88
     },
     {
@@ -892,7 +891,7 @@
       "anio": 2026,
       "mes": 2,
       "nombre_mes": "febrero",
-      "indice_ipc": 10714.63,
+      "indice_ipc": 10714.83,
       "variacion_pct": 2.9
     },
     {
@@ -900,8 +899,16 @@
       "anio": 2026,
       "mes": 3,
       "nombre_mes": "marzo",
-      "indice_ipc": 11077.06,
+      "indice_ipc": 11076.99,
       "variacion_pct": 3.38
+    },
+    {
+      "fecha": "2026-04",
+      "anio": 2026,
+      "mes": 4,
+      "nombre_mes": "abril",
+      "indice_ipc": 11365.0,
+      "variacion_pct": 2.6
     }
   ]
 }
