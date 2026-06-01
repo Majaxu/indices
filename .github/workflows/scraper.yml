@@ -2,10 +2,8 @@ name: Scraper ICL + IPC
 
 on:
   schedule:
-    # Corre 4 veces por dia en horario argentino (UTC-3)
-    # 09:00, 11:00, 13:00, 15:00 AR = 12:00, 14:00, 16:00, 18:00 UTC
-    - cron: '0 12,14,16,18 * * 1-5'  # Lunes a Viernes
-  workflow_dispatch:  # Permite correr manualmente desde GitHub
+    - cron: '0 12,14,16,18 * * 1-5'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -38,6 +36,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Sin cambios en los datos"
           else
-            git commit -m "📊 Actualización automática de indices $(date -u +%Y-%m-%d)"
+            git commit -m "📊 Actualizacion automatica de indices $(date -u +%Y-%m-%d)"
+            git pull --rebase origin main || true
             git push
           fi
