@@ -4,7 +4,7 @@ Scraper de indices economicos para Juarez Beltran S.A.
 
 Fuentes:
   - ICL: BCRA directo (serie 7988) + 2Captcha para datos futuros
-  - IPC: datos.gob.ar serie 148.3_INIVELNAL_DICI_M_26 (INDEC oficial)
+  - IPC: datos.gob.ar serie 145.3_INGNACUAL_DICI_M_38 (redondeado a 1 decimal = boletin INDEC)
 """
 
 import json
@@ -260,34 +260,47 @@ def update_icl():
 
 
 # ══════════════════════════════════════════════════════════
-#  IPC — datos.gob.ar (valores absolutos INDEC)
+#  IPC — datos.gob.ar (variaciones redondeadas = boletin INDEC)
 # ══════════════════════════════════════════════════════════
 
 def fetch_ipc():
     """
-    Obtiene IPC Nivel General Nacional desde datos.gob.ar.
-    Serie 148.3_INIVELNAL_DICI_M_26: valores absolutos, base dic 2016 = 100.
+    Obtiene variaciones mensuales IPC desde datos.gob.ar serie 145.3_INGNACUAL_DICI_M_38.
+    Redondea a 1 decimal para coincidir con el boletin oficial del INDEC.
+    Acumula en indice base 100.
     """
-    url = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&limit=5000&format=json"
-    print("  IPC: consultando datos.gob.ar (valores absolutos)...")
+    url = "https://apis.datos.gob.ar/series/api/series/?ids=145.3_INGNACUAL_DICI_M_38&limit=5000&format=json"
+    print("  IPC: consultando datos.gob.ar (variaciones)...")
     results = []
     try:
         r = requests.get(url, headers=HEADERS, timeout=30)
         r.raise_for_status()
         data = r.json()
+
+        # Parsear y redondear a 1 decimal (= boletin INDEC)
+        variaciones = []
         for entry in data.get("data", []):
             fecha_str = entry[0]  # "2017-01-01"
             valor = entry[1]
             if valor is None:
                 continue
+            fecha = fecha_str[:7]  # "2017-01"
+            var_pct = round(valor * 100, 1)  # 0.0258... → 2.6
+            variaciones.append((fecha, var_pct))
+
+        # Acumular indice base 100
+        acum = 100.0
+        for fecha, var in variaciones:
+            acum = acum * (1 + var / 100)
             results.append({
-                "fecha": fecha_str[:7],  # "2017-01"
-                "indice_ipc": round(valor, 2)
+                "fecha": fecha,
+                "indice_ipc": round(acum, 2)
             })
-        print(f"  IPC: {len(results)} meses obtenidos")
+
+        print(f"  IPC: {len(results)} meses")
         if results:
             last = results[-1]
-            print(f"  Ultimo: {last['fecha']} = {last['indice_ipc']}")
+            print(f"  Ultimo: {last['fecha']} (indice: {last['indice_ipc']})")
     except Exception as e:
         print(f"  IPC error: {e}")
     return results
@@ -303,9 +316,9 @@ def update_ipc():
 
     result = {
         "meta": {
-            "fuente": "INDEC via datos.gob.ar",
-            "serie": "148.3_INIVELNAL_DICI_M_26",
-            "descripcion": "IPC Nivel General Nacional, base dic 2016 = 100",
+            "fuente": "INDEC via datos.gob.ar (variaciones redondeadas = boletin oficial)",
+            "serie": "145.3_INGNACUAL_DICI_M_38",
+            "descripcion": "IPC Nivel General Nacional, variaciones acumuladas base 100",
             "frecuencia": "mensual",
             "ultima_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         },
