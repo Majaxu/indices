@@ -4,7 +4,7 @@
     "serie": "145.3_INGNACUAL_DICI_M_38",
     "descripcion": "IPC Nivel General Nacional, variaciones acumuladas base 100",
     "frecuencia": "mensual",
-    "ultima_actualizacion": "2026-06-12 17:55:45"
+    "ultima_actualizacion": "2026-06-12 19:49:11"
   },
   "data": [
     {
@@ -454,6 +454,10 @@
     {
       "fecha": "2026-04",
       "indice_ipc": 11339.71
+    },
+    {
+      "fecha": "2026-05",
+      "indice_ipc": 11577.85
     }
   ]
 }
