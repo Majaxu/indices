@@ -154,6 +154,12 @@ def fetch_icl_tabla(desde, hasta):
         }
         r = requests.post(BCRA_FORM_URL, data=form_data, headers=HEADERS,
                          verify=False, timeout=30, allow_redirects=True)
+        # ── DEBUG temporal: mostrar que devolvio el BCRA ──
+        print(f"  DEBUG: status={r.status_code} len={len(r.text)} url_final={r.url}")
+        print(f"  DEBUG: tiene_table={'<table' in r.text.lower()} tiene_captcha_error={'captcha_error' in r.text.lower()}")
+        print(f"  DEBUG: primeros 600 chars de la respuesta:")
+        print("  >>> " + r.text[:600].replace(chr(10), " ").replace(chr(13), " "))
+        print("  <<< fin DEBUG")
         if r.status_code == 200 and "<table" in r.text.lower():
             from html.parser import HTMLParser
             class TableParser(HTMLParser):
