@@ -198,22 +198,6 @@ def fetch_icl_tabla(desde, hasta):
     return results
 
 
-def should_fetch_full_table(existing_data):
-    _, max_fecha = fetch_icl_rango()
-    if not max_fecha:
-        return False
-    last_dates = sorted(existing_data.keys(), key=sort_key_fecha)
-    if not last_dates:
-        return True
-    our_max = sort_key_fecha(last_dates[-1])
-    if max_fecha > our_max:
-        print(f"  BCRA tiene datos hasta {max_fecha}, nosotros hasta {our_max} → bajando tabla")
-        return True
-    else:
-        print(f"  Datos al dia (BCRA max: {max_fecha}, nuestro: {our_max})")
-        return False
-
-
 def update_icl():
     print("\n═══ Actualizando ICL ═══")
     existing = load_existing(ICL_FILE)
@@ -224,13 +208,16 @@ def update_icl():
     new_data = {}
     new_data.update(fetch_icl_endpoint())
 
-    if CAPTCHA_API_KEY and should_fetch_full_table(by_date):
-        _, max_fecha = fetch_icl_rango()
-        if max_fecha:
-            now = datetime.now()
-            desde = (now - timedelta(days=60)).strftime("%Y-%m-%d")
-            tabla_data = fetch_icl_tabla(desde, max_fecha)
-            new_data.update(tabla_data)
+    # ── Bajar la tabla SIEMPRE (no depender de fetch_icl_rango, que reporta
+    #    solo hasta hoy y bloqueaba los valores que el BCRA publica a futuro).
+    #    Se pide hasta hoy+10 dias para capturar el ICL publicado por anticipado
+    #    (ej: el 29/06 el BCRA ya tiene cargados 30/06 y 01/07).
+    if CAPTCHA_API_KEY:
+        now = datetime.now()
+        desde = (now - timedelta(days=60)).strftime("%Y-%m-%d")
+        hasta = (now + timedelta(days=10)).strftime("%Y-%m-%d")
+        tabla_data = fetch_icl_tabla(desde, hasta)
+        new_data.update(tabla_data)
 
     added = updated = 0
     for fecha, valor in new_data.items():
