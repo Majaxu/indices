@@ -148,18 +148,21 @@ def fetch_icl_tabla(desde, hasta):
                 y, m, dd = d.split("-")
                 return f"{dd}/{m}/{y}"
             return d
+        # IMPORTANTE: el form del BCRA exige serie1..serie4 (=0). Sin estos
+        # campos, el POST falla con error de fechas/captcha. El POST valida el
+        # captcha y redirige (GET) a principales-variables-resultados con la tabla.
         form_data = {
-            "serie": "7988", "fecha_desde": fmt_date(desde),
-            "fecha_hasta": fmt_date(hasta), "cf-turnstile-response": token
+            "serie": "7988",
+            "serie1": "0", "serie2": "0", "serie3": "0", "serie4": "0",
+            "fecha_desde": fmt_date(desde),
+            "fecha_hasta": fmt_date(hasta),
+            "cf-turnstile-response": token
         }
         r = requests.post(BCRA_FORM_URL, data=form_data, headers=HEADERS,
                          verify=False, timeout=30, allow_redirects=True)
-        # ── DEBUG temporal: mostrar que devolvio el BCRA ──
-        print(f"  DEBUG: status={r.status_code} len={len(r.text)} url_final={r.url}")
-        print(f"  DEBUG: tiene_table={'<table' in r.text.lower()} tiene_captcha_error={'captcha_error' in r.text.lower()}")
-        print(f"  DEBUG: primeros 600 chars de la respuesta:")
-        print("  >>> " + r.text[:600].replace(chr(10), " ").replace(chr(13), " "))
-        print("  <<< fin DEBUG")
+        print(f"  ICL tabla: status={r.status_code} url_final={r.url}")
+        if "captcha_error" in r.url or "data_error" in r.url:
+            print(f"  ICL tabla: el BCRA rechazo el pedido (mirar url_final)")
         if r.status_code == 200 and "<table" in r.text.lower():
             from html.parser import HTMLParser
             class TableParser(HTMLParser):
@@ -216,12 +219,26 @@ def update_icl():
 
     # ── Bajar la tabla SIEMPRE (no depender de fetch_icl_rango, que reporta
     #    solo hasta hoy y bloqueaba los valores que el BCRA publica a futuro).
-    #    Se pide hasta hoy+10 dias para capturar el ICL publicado por anticipado
-    #    (ej: el 29/06 el BCRA ya tiene cargados 30/06 y 01/07).
+    #    El BCRA publica la serie del ICL "desde el 17 del mes en curso hasta
+    #    el 16 del mes siguiente". La ventana se renueva el dia 17 de cada mes.
+    #    Por eso el tope publicado depende del dia de hoy:
+    #      - del 1 al 16: la ventana vigente llega hasta el 16 de ESTE mes
+    #      - del 17 en adelante: ya se publico la ventana hasta el 16 del mes que viene
+    #    Pedimos justo hasta ese tope: capturamos todo lo disponible sin pasarnos
+    #    (pasarse dispara data_error=fechas_faltantes y no devuelve tabla).
     if CAPTCHA_API_KEY:
         now = datetime.now()
         desde = (now - timedelta(days=60)).strftime("%Y-%m-%d")
-        hasta = (now + timedelta(days=10)).strftime("%Y-%m-%d")
+        if now.day >= 17:
+            # ventana nueva: hasta el 16 del mes siguiente
+            if now.month == 12:
+                hasta_dt = now.replace(year=now.year + 1, month=1, day=16)
+            else:
+                hasta_dt = now.replace(month=now.month + 1, day=16)
+        else:
+            # ventana vigente: hasta el 16 de este mes
+            hasta_dt = now.replace(day=16)
+        hasta = hasta_dt.strftime("%Y-%m-%d")
         tabla_data = fetch_icl_tabla(desde, hasta)
         new_data.update(tabla_data)
 
