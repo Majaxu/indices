@@ -181,6 +181,9 @@ async function loadData() {
       if (dd === '01') iclData[`${yyyy}-${mm}`] = parseFloat(d.valor);
     }
 
+    // Default: ultimo mes con dato ICL REAL, antes del fallback
+    const lastRealIcl = Object.keys(iclData).sort().pop();
+
     // ICL fallback: si el proximo mes no tiene dia 1, usar ultimo valor diario
     if (iclJson.data.length > 0) {
       const le = iclJson.data[iclJson.data.length - 1];
@@ -208,10 +211,9 @@ async function loadData() {
       src.style.color = '#16a34a';
     }
 
-    // Fecha default: ultimo mes con dato ICL dia 1
-    const lastIcl = Object.keys(iclData).sort().pop();
-    if (lastIcl) {
-      document.getElementById('refDate').value = lastIcl + '-01';
+    // Fecha default: ultimo mes con dato ICL REAL (no el fallback)
+    if (lastRealIcl) {
+      document.getElementById('refDate').value = lastRealIcl + '-01';
     }
     calculate();
 
