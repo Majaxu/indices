@@ -148,9 +148,14 @@ def fetch_icl_tabla(desde, hasta):
                 y, m, dd = d.split("-")
                 return f"{dd}/{m}/{y}"
             return d
-        # IMPORTANTE: el form del BCRA exige serie1..serie4 (=0). Sin estos
-        # campos, el POST falla con error de fechas/captcha. El POST valida el
-        # captcha y redirige (GET) a principales-variables-resultados con la tabla.
+
+        # ── PASO 1: POST a variables.php para validar el captcha ──
+        # CLAVE: allow_redirects=False. El POST responde un 302 hacia
+        # principales-variables-resultados/?...&ts=...&token=... Si se deja que
+        # requests siga el redirect solo (allow_redirects=True), Cloudflare
+        # rechaza la peticion redirigida y devuelve la pagina de error. Por eso
+        # leemos el header Location y hacemos un GET aparte (PASO 2).
+        # El form exige serie1..serie4 (=0) ademas de serie/fechas/captcha.
         form_data = {
             "serie": "7988",
             "serie1": "0", "serie2": "0", "serie3": "0", "serie4": "0",
@@ -158,12 +163,25 @@ def fetch_icl_tabla(desde, hasta):
             "fecha_hasta": fmt_date(hasta),
             "cf-turnstile-response": token
         }
-        r = requests.post(BCRA_FORM_URL, data=form_data, headers=HEADERS,
-                         verify=False, timeout=30, allow_redirects=True)
-        print(f"  ICL tabla: status={r.status_code} url_final={r.url}")
-        if "captcha_error" in r.url or "data_error" in r.url:
-            print(f"  ICL tabla: el BCRA rechazo el pedido (mirar url_final)")
-        if r.status_code == 200 and "<table" in r.text.lower():
+        sess = requests.Session()
+        r1 = sess.post(BCRA_FORM_URL, data=form_data, headers=HEADERS,
+                       verify=False, timeout=30, allow_redirects=False)
+        location = r1.headers.get("Location", "")
+        print(f"  ICL tabla: POST status={r1.status_code} location={location[:90]}")
+
+        if not location or "resultados" not in location:
+            print(f"  ICL tabla: el BCRA no redirigio a resultados (captcha/fechas rechazados)")
+            if "error" in location:
+                print(f"  ICL tabla: location indica error -> {location}")
+            return results
+
+        # ── PASO 2: GET a la URL de resultados (trae la tabla) ──
+        if location.startswith("/"):
+            location = "https://www.bcra.gob.ar" + location
+        r2 = sess.get(location, headers=HEADERS, verify=False, timeout=30)
+        print(f"  ICL tabla: GET resultados status={r2.status_code} tiene_tabla={'<table' in r2.text.lower()}")
+
+        if r2.status_code == 200 and "<table" in r2.text.lower():
             from html.parser import HTMLParser
             class TableParser(HTMLParser):
                 def __init__(self):
@@ -184,7 +202,7 @@ def fetch_icl_tabla(desde, hasta):
                     if self.in_td and self.current_row:
                         self.current_row[-1] += data.strip()
             parser = TableParser()
-            parser.feed(r.text)
+            parser.feed(r2.text)
             for row in parser.cells:
                 if len(row) >= 2:
                     fecha_str = normalize_fecha(row[0].strip())
@@ -199,9 +217,7 @@ def fetch_icl_tabla(desde, hasta):
                         continue
             print(f"  ICL tabla: {len(results)} registros obtenidos")
         else:
-            print(f"  ICL tabla: sin tabla (status {r.status_code})")
-            if "captcha_error" in r.text.lower() or "captcha_error" in r.url:
-                print("  ICL tabla: captcha rechazado")
+            print(f"  ICL tabla: resultados sin tabla (status {r2.status_code})")
     except Exception as e:
         print(f"  ICL tabla error: {e}")
     return results
