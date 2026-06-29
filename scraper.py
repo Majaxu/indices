@@ -143,24 +143,21 @@ def fetch_icl_tabla(desde, hasta):
         return results
     print(f"  ICL tabla: POST {desde} → {hasta}")
     try:
-        def fmt_date(d):
-            if "-" in d:
-                y, m, dd = d.split("-")
-                return f"{dd}/{m}/{y}"
-            return d
-
         # ── PASO 1: POST a variables.php para validar el captcha ──
-        # CLAVE: allow_redirects=False. El POST responde un 302 hacia
+        # CLAVE: allow_redirects=False. El POST responde un 303 hacia
         # principales-variables-resultados/?...&ts=...&token=... Si se deja que
         # requests siga el redirect solo (allow_redirects=True), Cloudflare
         # rechaza la peticion redirigida y devuelve la pagina de error. Por eso
         # leemos el header Location y hacemos un GET aparte (PASO 2).
         # El form exige serie1..serie4 (=0) ademas de serie/fechas/captcha.
+        # IMPORTANTE: las fechas van en formato YYYY-MM-DD (ISO), igual que las
+        # manda el <input type="date"> de la web. Si se mandan en DD/MM/YYYY el
+        # BCRA las descarta y responde data_error=fechas_faltantes.
         form_data = {
             "serie": "7988",
             "serie1": "0", "serie2": "0", "serie3": "0", "serie4": "0",
-            "fecha_desde": fmt_date(desde),
-            "fecha_hasta": fmt_date(hasta),
+            "fecha_desde": desde,
+            "fecha_hasta": hasta,
             "cf-turnstile-response": token
         }
         sess = requests.Session()
