@@ -174,11 +174,21 @@ async function loadData() {
       fetch(base + 'ipc.json').then(r => { if (!r.ok) throw new Error('IPC: HTTP ' + r.status); return r.json(); })
     ]);
 
-    // ICL: valor del dia 1 de cada mes
+// ICL: valor del dia 1 de cada mes
     iclData = {};
     for (const d of iclJson.data) {
       const [dd, mm, yyyy] = d.fecha.split('/');
       if (dd === '01') iclData[`${yyyy}-${mm}`] = parseFloat(d.valor);
+    }
+
+    // ICL fallback: si el proximo mes no tiene dia 1, usar ultimo valor diario
+    if (iclJson.data.length > 0) {
+      const le = iclJson.data[iclJson.data.length - 1];
+      const [ld, lm, ly] = le.fecha.split('/');
+      let nm = parseInt(lm) + 1, ny = parseInt(ly);
+      if (nm > 12) { nm = 1; ny++; }
+      const nextYm = `${ny}-${String(nm).padStart(2, '0')}`;
+      if (!iclData[nextYm]) iclData[nextYm] = parseFloat(le.valor);
     }
 
     // IPC: indice absoluto por mes (datos.gob.ar)
