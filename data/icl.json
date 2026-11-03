@@ -3,7 +3,7 @@
     "fuente": "BCRA serie 7988",
     "descripcion": "Indice para Contratos de Locacion (ICL)",
     "frecuencia": "diaria",
-    "ultima_actualizacion": "2026-11-02 20:54:02"
+    "ultima_actualizacion": "2026-11-03 18:41:29"
   },
   "data": [
     {
@@ -4125,6 +4125,10 @@
     {
       "fecha": "02/11/2026",
       "valor": 37.23
+    },
+    {
+      "fecha": "03/11/2026",
+      "valor": 37.25
     }
   ]
 }
