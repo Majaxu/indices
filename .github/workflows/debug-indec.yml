@@ -1,0 +1,11 @@
+name: Debug INDEC xls
+on: { workflow_dispatch: {} }
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -sSL -A "Mozilla/5.0" -o sh_ipc.xls "https://www.indec.gob.ar/ftp/cuadros/economia/sh_ipc_09_26.xls"
+          ls -la sh_ipc.xls; file sh_ipc.xls
+      - uses: actions/upload-artifact@v4
+        with: { name: indec-xls, path: sh_ipc.xls }
