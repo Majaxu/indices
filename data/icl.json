@@ -1,9 +1,9 @@
 {
   "meta": {
-    "fuente": "BCRA serie 7988",
+    "fuente": "BCRA API estadisticas v4.0, idVariable 40 (ex serie 7988)",
     "descripcion": "Indice para Contratos de Locacion (ICL)",
     "frecuencia": "diaria",
-    "ultima_actualizacion": "2026-11-03 18:41:29"
+    "ultima_actualizacion": "2026-11-04 14:04:47"
   },
   "data": [
     {
@@ -4083,6 +4083,14 @@
       "valor": 36.88
     },
     {
+      "fecha": "17/10/2026",
+      "valor": 36.9
+    },
+    {
+      "fecha": "18/10/2026",
+      "valor": 36.92
+    },
+    {
       "fecha": "19/10/2026",
       "valor": 36.94
     },
@@ -4101,6 +4109,14 @@
     {
       "fecha": "23/10/2026",
       "valor": 37.02
+    },
+    {
+      "fecha": "24/10/2026",
+      "valor": 37.05
+    },
+    {
+      "fecha": "25/10/2026",
+      "valor": 37.07
     },
     {
       "fecha": "26/10/2026",
@@ -4123,12 +4139,72 @@
       "valor": 37.17
     },
     {
+      "fecha": "31/10/2026",
+      "valor": 37.19
+    },
+    {
+      "fecha": "01/11/2026",
+      "valor": 37.21
+    },
+    {
       "fecha": "02/11/2026",
       "valor": 37.23
     },
     {
       "fecha": "03/11/2026",
       "valor": 37.25
+    },
+    {
+      "fecha": "04/11/2026",
+      "valor": 37.28
+    },
+    {
+      "fecha": "05/11/2026",
+      "valor": 37.3
+    },
+    {
+      "fecha": "06/11/2026",
+      "valor": 37.32
+    },
+    {
+      "fecha": "07/11/2026",
+      "valor": 37.34
+    },
+    {
+      "fecha": "08/11/2026",
+      "valor": 37.36
+    },
+    {
+      "fecha": "09/11/2026",
+      "valor": 37.38
+    },
+    {
+      "fecha": "10/11/2026",
+      "valor": 37.4
+    },
+    {
+      "fecha": "11/11/2026",
+      "valor": 37.42
+    },
+    {
+      "fecha": "12/11/2026",
+      "valor": 37.44
+    },
+    {
+      "fecha": "13/11/2026",
+      "valor": 37.47
+    },
+    {
+      "fecha": "14/11/2026",
+      "valor": 37.49
+    },
+    {
+      "fecha": "15/11/2026",
+      "valor": 37.51
+    },
+    {
+      "fecha": "16/11/2026",
+      "valor": 37.53
     }
   ]
 }
