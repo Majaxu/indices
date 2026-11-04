@@ -9,9 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          test -f debug/sh_ipc.xls && exit 0
           mkdir -p debug
-          curl -sSL -A "Mozilla/5.0" -o debug/sh_ipc.xls "https://www.indec.gob.ar/ftp/cuadros/economia/sh_ipc_09_26.xls"
-          curl -sSL -A "Mozilla/5.0" -o debug/ipc_page.html "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
+          curl -sSL -A "Mozilla/5.0" -o debug/nivel4.js "https://www.indec.gob.ar/Scripts/nivel4.js"
+          curl -sSL -A "Mozilla/5.0" -o debug/tema.html "https://www.indec.gob.ar/Nivel4/Tema/3/5/31"
+          for u in sh_ipc_10_26.xls sh_ipc_10_26.xlsx sh_ipc_11_26.xls sh_ipc_09_26.xlsx; do
+            echo "$u $(curl -sSL -A Mozilla/5.0 -o /tmp/f -w '%{http_code} %{content_type} %{size_download}' https://www.indec.gob.ar/ftp/cuadros/economia/$u) $(head -c4 /tmp/f | xxd -p)" >> debug/probe.txt
+          done
           git config user.name bot; git config user.email bot@x
-          git add debug && git commit -m "debug: xls INDEC" && git push
+          git add debug && git commit -m "debug: nivel4 + probe" && git push
