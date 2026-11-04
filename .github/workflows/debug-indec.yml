@@ -1,5 +1,8 @@
 name: Debug INDEC xls
-on: { workflow_dispatch: {} }
+on:
+  push:
+    branches: [debug-indec]
+  workflow_dispatch: {}
 jobs:
   fetch:
     runs-on: ubuntu-latest
