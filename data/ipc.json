@@ -1,9 +1,9 @@
 {
   "meta": {
-    "fuente": "datos.gob.ar (respaldo)",
+    "fuente": "INDEC (sh_ipc_divisiones.xls)",
     "descripcion": "IPC Nivel General Nacional, variaciones mensuales (1 decimal = boletin INDEC) acumuladas base 100",
     "frecuencia": "mensual",
-    "ultima_actualizacion": "2026-11-04 14:38:50"
+    "ultima_actualizacion": "2026-11-04 14:53:44"
   },
   "data": [
     {
@@ -469,6 +469,10 @@
     {
       "fecha": "2026-08",
       "indice_ipc": 12250.36
+    },
+    {
+      "fecha": "2026-09",
+      "indice_ipc": 12483.11
     }
   ]
 }
