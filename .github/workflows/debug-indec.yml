@@ -2,13 +2,16 @@ name: Debug INDEC xls
 on:
   push:
     branches: [debug-indec]
-  workflow_dispatch: {}
+permissions: { contents: write }
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: |
-          curl -sSL -A "Mozilla/5.0" -o sh_ipc.xls "https://www.indec.gob.ar/ftp/cuadros/economia/sh_ipc_09_26.xls"
-          ls -la sh_ipc.xls; file sh_ipc.xls
-      - uses: actions/upload-artifact@v4
-        with: { name: indec-xls, path: sh_ipc.xls }
+          test -f debug/sh_ipc.xls && exit 0
+          mkdir -p debug
+          curl -sSL -A "Mozilla/5.0" -o debug/sh_ipc.xls "https://www.indec.gob.ar/ftp/cuadros/economia/sh_ipc_09_26.xls"
+          curl -sSL -A "Mozilla/5.0" -o debug/ipc_page.html "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
+          git config user.name bot; git config user.email bot@x
+          git add debug && git commit -m "debug: xls INDEC" && git push
