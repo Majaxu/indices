@@ -8,8 +8,9 @@ Fuentes:
          los valores a futuro que el BCRA ya publico (hasta el 16 del mes
          siguiente, ventana que se renueva el 17 de cada mes).
   - IPC: fuente primaria = Excel de series historicas del INDEC
-         (sh_ipc_MM_YY.xls, hoja de variacion mensual, Nivel general, total
-         nacional). Respaldo = datos.gob.ar serie 145.3_INGNACUAL_DICI_M_38.
+         (sh_ipc_divisiones.xls, hoja "Variacion mensual IPC Nacional", fila
+         "Nivel general" del total nacional). Respaldo = datos.gob.ar serie
+         145.3_INGNACUAL_DICI_M_38.
          En ambos casos: variacion mensual redondeada a 1 decimal (= boletin
          INDEC) y acumulada en indice base 100 desde ene-2017.
 
@@ -54,9 +55,12 @@ ICL_DIAS_ATRAS = 60           # re-pedimos los ultimos 60 dias por si el BCRA co
 ICL_DIAS_ADELANTE = 45        # cubre la ventana publicada a futuro (hasta el 16 del mes siguiente)
 
 # IPC
-INDEC_IPC_PAGE = "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31"
+# La pagina publica del IPC (indec.gob.ar/indec/web/Nivel4-Tema-3-5-31) arma los
+# links por ajax desde este fragmento; ahi aparecen los archivos de nombre fijo.
+INDEC_IPC_FRAGMENT = "https://www.indec.gob.ar/Nivel4/Tema/3/5/31"
 INDEC_FTP_BASE = "https://www.indec.gob.ar/ftp/cuadros/economia/"
-INDEC_XLS_RE = re.compile(r"sh_ipc_(\d{2})_(\d{2})\.xlsx?", re.IGNORECASE)
+INDEC_XLS_FIJO = "sh_ipc_divisiones.xls"     # Nivel general y divisiones, serie completa
+INDEC_XLS_RE = re.compile(r"sh_ipc[\w\-]*\.xlsx?", re.IGNORECASE)
 DATOS_GOB_URL = "https://apis.datos.gob.ar/series/api/series/?ids=145.3_INGNACUAL_DICI_M_38&limit=5000&format=json"
 IPC_PRIMER_MES = "2017-01"    # arranque del indice base 100 (= serie de datos.gob.ar)
 
@@ -216,36 +220,23 @@ def update_icl(st):
 
 def indec_candidate_urls():
     """
-    1) Busca en la pagina del IPC del INDEC el link sh_ipc_MM_YY.xls(x) mas nuevo.
-    2) Si no lo encuentra, prueba los nombres de los ultimos 3 meses.
+    1) Lee el fragmento ajax de la pagina del IPC y toma los links sh_ipc*.xls,
+       con 'divisiones' primero (es el que tiene Nivel general + divisiones).
+    2) Siempre agrega el nombre fijo conocido como respaldo.
     """
     urls = []
     try:
-        r = requests.get(INDEC_IPC_PAGE, headers=HEADERS, timeout=30)
+        r = requests.get(INDEC_IPC_FRAGMENT, headers=HEADERS, timeout=30)
         r.raise_for_status()
-        found = set()
-        for m in INDEC_XLS_RE.finditer(r.text):
-            found.add(m.group(0))
-        # ordenar por (anio, mes) descendente
-        def key(name):
-            mm, yy = INDEC_XLS_RE.match(name).groups()
-            return (int(yy), int(mm))
-        for name in sorted(found, key=key, reverse=True):
-            urls.append(INDEC_FTP_BASE + name)
-        dbg(f"links en pagina INDEC: {sorted(found, key=key, reverse=True)}")
+        found = sorted(set(m.group(0) for m in INDEC_XLS_RE.finditer(r.text)))
+        dbg(f"links en pagina INDEC: {found}")
+        found.sort(key=lambda n: (0 if "division" in n.lower() else 1, n))
+        urls = [INDEC_FTP_BASE + n for n in found]
     except Exception as e:
-        print(f"  INDEC pagina: no se pudo leer ({e}); pruebo nombres por fecha")
-
-    now = datetime.now()
-    y, m = now.year, now.month
-    for _ in range(3):
-        name = f"sh_ipc_{m:02d}_{y % 100:02d}.xls"
-        u = INDEC_FTP_BASE + name
-        if u not in urls:
-            urls.append(u)
-        m -= 1
-        if m == 0:
-            m, y = 12, y - 1
+        print(f"  INDEC pagina: no se pudo leer ({e}); uso el nombre fijo")
+    fijo = INDEC_FTP_BASE + INDEC_XLS_FIJO
+    if fijo not in urls:
+        urls.append(fijo)
     return urls
 
 
@@ -264,7 +255,7 @@ def download_indec_xls(urls):
                 return u, r.content
         except Exception as e:
             dbg(f"{u} → error {e}")
-    raise RuntimeError("no se encontro ningun Excel sh_ipc_MM_YY en el INDEC")
+    raise RuntimeError("no se pudo descargar el Excel sh_ipc_divisiones.xls del INDEC")
 
 
 def _norm(s):
@@ -364,30 +355,32 @@ def parse_indec_variaciones(content):
         # (despues del header); luego la primera 'nivel general' que siga
         start = best_hdr + 1
         nac = None
-        for i in range(start, len(rows)):
+        for i in range(best_hdr, len(rows)):
             txt = " ".join(_norm(v) for v in rows[i] if isinstance(v, str))
             if "total nacional" in txt or txt.strip() == "nacional":
                 nac = i
                 break
+        # En el Excel del INDEC la fila "Total nacional" ES la fila de fechas, y
+        # antes de los datos hay un titulo "Nivel general y divisiones COICOP"
+        # sin numeros: por eso se exige que la fila tenga valores numericos.
         search_from = nac if nac is not None else start
-        ng = None
+        ng, serie = None, []
         for i in range(search_from, len(rows)):
-            if any(isinstance(v, str) and "nivel general" in _norm(v) for v in rows[i]):
-                ng = i
+            if not any(isinstance(v, str) and "nivel general" in _norm(v) for v in rows[i]):
+                continue
+            vals = []
+            for j, ym in best_months.items():
+                v = rows[i][j] if j < len(rows[i]) else None
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
+                    vals.append((ym, float(v)))
+            if len(vals) >= 12:
+                ng, serie = i, vals
                 break
+            dbg(f"hoja '{name}': fila {i} dice 'Nivel general' pero sin valores (titulo), sigo")
         if ng is None:
-            dbg(f"hoja '{name}': sin fila 'Nivel general'")
+            dbg(f"hoja '{name}': sin fila 'Nivel general' con datos")
             continue
-        dbg(f"hoja '{name}': bloque nacional fila {nac}, 'Nivel general' fila {ng}")
-
-        serie = []
-        for j, ym in best_months.items():
-            v = rows[ng][j] if j < len(rows[ng]) else None
-            if isinstance(v, (int, float)) and not isinstance(v, bool):
-                serie.append((ym, float(v)))
-        if len(serie) < 12:
-            dbg(f"hoja '{name}': fila Nivel general con pocos valores ({len(serie)})")
-            continue
+        dbg(f"hoja '{name}': bloque nacional fila {nac}, 'Nivel general' fila {ng}, {len(serie)} valores")
         serie.sort()
         # ¿viene en fraccion (0.019) o en porcentaje (1.9)?
         if max(abs(v) for _, v in serie) < 1.0:
@@ -475,7 +468,7 @@ def update_ipc(st):
             print(f"  ✓ INDEC y datos.gob.ar coinciden en {len(set(dp) & set(dr))} meses comunes")
 
     if primaria:
-        serie, fuente, usa_respaldo = primaria, "INDEC (Excel series historicas)", False
+        serie, fuente, usa_respaldo = primaria, "INDEC (sh_ipc_divisiones.xls)", False
     elif respaldo:
         serie, fuente, usa_respaldo = respaldo, "datos.gob.ar (respaldo)", True
     else:
