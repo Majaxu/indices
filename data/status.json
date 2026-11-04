@@ -2,20 +2,20 @@
   "icl": {
     "ok": true,
     "fuente": "BCRA API v4.0",
-    "ultimo_ok": "2026-11-04 14:53:40",
+    "ultimo_ok": "2026-11-04 21:42:05",
     "ultimo_dato": "16/11/2026",
     "error": null,
     "respaldo": false,
-    "ultimo_intento": "2026-11-04 14:53:40"
+    "ultimo_intento": "2026-11-04 21:42:05"
   },
   "ipc": {
     "ok": true,
     "fuente": "INDEC (sh_ipc_divisiones.xls)",
-    "ultimo_ok": "2026-11-04 14:53:44",
+    "ultimo_ok": "2026-11-04 21:42:09",
     "ultimo_dato": "2026-09",
     "error": null,
     "respaldo": false,
-    "ultimo_intento": "2026-11-04 14:53:44"
+    "ultimo_intento": "2026-11-04 21:42:09"
   },
-  "actualizado": "2026-11-04 14:53:44"
+  "actualizado": "2026-11-04 21:42:09"
 }
