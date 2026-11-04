@@ -1,0 +1,21 @@
+{
+  "icl": {
+    "ok": true,
+    "fuente": "BCRA API v4.0",
+    "ultimo_ok": "2026-11-04 14:38:44",
+    "ultimo_dato": "16/11/2026",
+    "error": null,
+    "respaldo": false,
+    "ultimo_intento": "2026-11-04 14:38:44"
+  },
+  "ipc": {
+    "ok": true,
+    "fuente": "datos.gob.ar (respaldo)",
+    "ultimo_ok": "2026-11-04 14:38:50",
+    "ultimo_dato": "2026-08",
+    "error": "no se pudo ubicar la serie 'Nivel general' / total nacional en el Excel",
+    "respaldo": true,
+    "ultimo_intento": "2026-11-04 14:38:50"
+  },
+  "actualizado": "2026-11-04 14:38:50"
+}
