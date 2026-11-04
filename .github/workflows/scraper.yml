@@ -2,7 +2,7 @@ name: Scraper ICL + IPC
 
 on:
   schedule:
-    - cron: '0 12,14,16,18 * * 1-5'
+    - cron: '0 12,16 * * *'
   workflow_dispatch:
 
 permissions:
@@ -24,8 +24,6 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run scraper
-        env:
-          CAPTCHA_API_KEY: ${{ secrets.CAPTCHA_API_KEY }}
         run: python scraper.py
 
       - name: Commit & push changes

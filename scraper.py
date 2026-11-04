@@ -3,13 +3,14 @@
 Scraper de indices economicos para Juarez Beltran S.A.
 
 Fuentes:
-  - ICL: BCRA directo (serie 7988) + 2Captcha para datos futuros
+  - ICL: API oficial del BCRA (estadisticas v4.0, idVariable 40). Sin captcha,
+         sin autenticacion. Trae TODOS los dias (fines de semana incluidos) y
+         los valores a futuro que el BCRA ya publico (hasta el 16 del mes
+         siguiente, ventana que se renueva el 17 de cada mes).
   - IPC: datos.gob.ar serie 145.3_INGNACUAL_DICI_M_38 (redondeado a 1 decimal = boletin INDEC)
 """
 
 import json
-import os
-import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -20,13 +21,14 @@ DATA_DIR = Path(__file__).parent / "data"
 ICL_FILE = DATA_DIR / "icl.json"
 IPC_FILE = DATA_DIR / "ipc.json"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json",
 }
 
-CAPTCHA_API_KEY = os.environ.get("CAPTCHA_API_KEY", "")
-TURNSTILE_SITEKEY = "0x4AAAAAACOPrKcUiECJPvGw"
-BCRA_FORM_URL = "https://www.bcra.gob.ar/api/captcha/variables.php"
-BCRA_PAGE_URL = "https://www.bcra.gob.ar/principales-variables-datos/?serie=7988"
+BCRA_API = "https://api.bcra.gob.ar/estadisticas/v4.0/monetarias"
+ICL_ID_VARIABLE = 40          # "Indice para Contratos de Locacion (ICL)"
+ICL_DIAS_ATRAS = 60           # re-pedimos los ultimos 60 dias por si el BCRA corrige
+ICL_DIAS_ADELANTE = 45        # cubre la ventana publicada a futuro (hasta el 16 del mes siguiente)
 
 
 def load_existing(filepath):
@@ -43,11 +45,9 @@ def save_json(filepath, data):
     print(f"  ✓ Guardado {filepath} ({len(data.get('data', []))} registros)")
 
 
-def normalize_fecha(fecha_raw):
-    if "-" in fecha_raw and len(fecha_raw) == 10 and fecha_raw[4] == "-":
-        y, m, d = fecha_raw.split("-")
-        return f"{d}/{m}/{y}"
-    return fecha_raw
+def iso_to_ddmmyyyy(fecha_iso):
+    y, m, d = fecha_iso[:10].split("-")
+    return f"{d}/{m}/{y}"
 
 
 def sort_key_fecha(fecha_str):
@@ -58,165 +58,40 @@ def sort_key_fecha(fecha_str):
 
 
 # ══════════════════════════════════════════════════════════
-#  2Captcha — Resolver Cloudflare Turnstile
+#  ICL — API BCRA v4.0 (idVariable 40)
 # ══════════════════════════════════════════════════════════
 
-def solve_turnstile():
-    if not CAPTCHA_API_KEY:
-        print("  2Captcha: sin API key, skip")
-        return None
-    print("  2Captcha: enviando captcha...")
-    try:
-        resp = requests.post("https://2captcha.com/in.php", data={
-            "key": CAPTCHA_API_KEY, "method": "turnstile",
-            "sitekey": TURNSTILE_SITEKEY, "pageurl": BCRA_PAGE_URL, "json": 1
-        }, timeout=30)
-        result = resp.json()
-        if result.get("status") != 1:
-            print(f"  2Captcha error: {result}")
-            return None
-        task_id = result["request"]
-        print(f"  2Captcha: tarea {task_id}, esperando...")
-        for i in range(30):
-            time.sleep(5)
-            resp = requests.get("https://2captcha.com/res.php", params={
-                "key": CAPTCHA_API_KEY, "action": "get", "id": task_id, "json": 1
-            }, timeout=30)
-            result = resp.json()
-            if result.get("status") == 1:
-                print(f"  2Captcha: resuelto!")
-                return result["request"]
-            elif result.get("request") != "CAPCHA_NOT_READY":
-                print(f"  2Captcha error: {result}")
-                return None
-            if i % 4 == 0:
-                print(f"  2Captcha: esperando... ({(i+1)*5}s)")
-        print("  2Captcha: timeout")
-        return None
-    except Exception as e:
-        print(f"  2Captcha error: {e}")
-        return None
-
-
-# ══════════════════════════════════════════════════════════
-#  ICL — BCRA serie 7988
-# ══════════════════════════════════════════════════════════
-
-def fetch_icl_endpoint():
-    url = "https://www.bcra.gob.ar/api/endpoints/principales-variables-ultimas.php"
+def fetch_icl_api(desde, hasta):
+    """
+    Devuelve {"dd/mm/yyyy": valor} con todos los dias publicados en el rango.
+    La API devuelve como maximo 1000 registros por llamada; para 105 dias sobra.
+    """
+    url = f"{BCRA_API}/{ICL_ID_VARIABLE}"
+    params = {"desde": desde, "hasta": hasta, "limit": 1000}
     results = {}
+    print(f"  ICL API: GET {desde} → {hasta}")
     try:
-        r = requests.get(url, headers=HEADERS, verify=False, timeout=30)
+        r = requests.get(url, params=params, headers=HEADERS, timeout=30)
         r.raise_for_status()
         data = r.json()
-        serie = data.get("series", {}).get("7988")
-        if serie:
-            fecha = normalize_fecha(serie["fecha"])
-            valor = float(serie["valor"])
-            results[fecha] = valor
-            print(f"  ICL endpoint: {fecha} = {valor}")
-        else:
-            print("  ICL endpoint: serie 7988 no encontrada")
-    except Exception as e:
-        print(f"  ICL endpoint error: {e}")
-    return results
-
-
-def fetch_icl_rango():
-    url = "https://www.bcra.gob.ar/api/endpoints/principales-variables-rango.php?serie=7988"
-    try:
-        r = requests.get(url, headers=HEADERS, verify=False, timeout=15)
-        r.raise_for_status()
-        data = r.json()
-        if data.get("success"):
-            return data.get("min_fecha"), data.get("max_fecha")
-    except Exception as e:
-        print(f"  ICL rango error: {e}")
-    return None, None
-
-
-def fetch_icl_tabla(desde, hasta):
-    results = {}
-    token = solve_turnstile()
-    if not token:
-        print("  ICL tabla: no se pudo resolver captcha")
-        return results
-    print(f"  ICL tabla: POST {desde} → {hasta}")
-    try:
-        # ── PASO 1: POST a variables.php para validar el captcha ──
-        # CLAVE: allow_redirects=False. El POST responde un 303 hacia
-        # principales-variables-resultados/?...&ts=...&token=... Si se deja que
-        # requests siga el redirect solo (allow_redirects=True), Cloudflare
-        # rechaza la peticion redirigida y devuelve la pagina de error. Por eso
-        # leemos el header Location y hacemos un GET aparte (PASO 2).
-        # El form exige serie1..serie4 (=0) ademas de serie/fechas/captcha.
-        # IMPORTANTE: las fechas van en formato YYYY-MM-DD (ISO), igual que las
-        # manda el <input type="date"> de la web. Si se mandan en DD/MM/YYYY el
-        # BCRA las descarta y responde data_error=fechas_faltantes.
-        form_data = {
-            "serie": "7988",
-            "serie1": "0", "serie2": "0", "serie3": "0", "serie4": "0",
-            "fecha_desde": desde,
-            "fecha_hasta": hasta,
-            "cf-turnstile-response": token
-        }
-        sess = requests.Session()
-        r1 = sess.post(BCRA_FORM_URL, data=form_data, headers=HEADERS,
-                       verify=False, timeout=30, allow_redirects=False)
-        location = r1.headers.get("Location", "")
-        print(f"  ICL tabla: POST status={r1.status_code} location={location[:90]}")
-
-        if not location or "resultados" not in location:
-            print(f"  ICL tabla: el BCRA no redirigio a resultados (captcha/fechas rechazados)")
-            if "error" in location:
-                print(f"  ICL tabla: location indica error -> {location}")
+        if data.get("status") != 200:
+            print(f"  ICL API: status inesperado {data.get('status')} {data.get('errorMessages', '')}")
             return results
-
-        # ── PASO 2: GET a la URL de resultados (trae la tabla) ──
-        if location.startswith("/"):
-            location = "https://www.bcra.gob.ar" + location
-        r2 = sess.get(location, headers=HEADERS, verify=False, timeout=30)
-        print(f"  ICL tabla: GET resultados status={r2.status_code} tiene_tabla={'<table' in r2.text.lower()}")
-
-        if r2.status_code == 200 and "<table" in r2.text.lower():
-            from html.parser import HTMLParser
-            class TableParser(HTMLParser):
-                def __init__(self):
-                    super().__init__()
-                    self.in_td = False
-                    self.cells = []
-                    self.current_row = []
-                def handle_starttag(self, tag, attrs):
-                    if tag == "td":
-                        self.in_td = True
-                        self.current_row.append("")
-                def handle_endtag(self, tag):
-                    if tag == "td": self.in_td = False
-                    elif tag == "tr" and self.current_row:
-                        self.cells.append(self.current_row)
-                        self.current_row = []
-                def handle_data(self, data):
-                    if self.in_td and self.current_row:
-                        self.current_row[-1] += data.strip()
-            parser = TableParser()
-            parser.feed(r2.text)
-            for row in parser.cells:
-                if len(row) >= 2:
-                    fecha_str = normalize_fecha(row[0].strip())
-                    valor_str = row[1].strip().replace(".", "").replace(",", ".")
-                    try:
-                        parts = fecha_str.split("/")
-                        if len(parts) == 3 and len(parts[2]) == 4:
-                            valor = float(valor_str)
-                            if valor > 0:
-                                results[fecha_str] = valor
-                    except (ValueError, IndexError):
-                        continue
-            print(f"  ICL tabla: {len(results)} registros obtenidos")
+        for serie in data.get("results", []):
+            if serie.get("idVariable") != ICL_ID_VARIABLE:
+                continue
+            for d in serie.get("detalle", []):
+                valor = d.get("valor")
+                if valor is None:
+                    continue
+                results[iso_to_ddmmyyyy(d["fecha"])] = round(float(valor), 2)
+        if results:
+            fechas = sorted(results, key=sort_key_fecha)
+            print(f"  ICL API: {len(results)} registros ({fechas[0]} → {fechas[-1]})")
         else:
-            print(f"  ICL tabla: resultados sin tabla (status {r2.status_code})")
+            print("  ICL API: sin registros en el rango")
     except Exception as e:
-        print(f"  ICL tabla error: {e}")
+        print(f"  ICL API error: {e}")
     return results
 
 
@@ -227,33 +102,14 @@ def update_icl():
     for entry in existing.get("data", []):
         by_date[entry["fecha"]] = entry["valor"]
 
-    new_data = {}
-    new_data.update(fetch_icl_endpoint())
+    now = datetime.now()
+    desde = (now - timedelta(days=ICL_DIAS_ATRAS)).strftime("%Y-%m-%d")
+    hasta = (now + timedelta(days=ICL_DIAS_ADELANTE)).strftime("%Y-%m-%d")
+    new_data = fetch_icl_api(desde, hasta)
 
-    # ── Bajar la tabla SIEMPRE (no depender de fetch_icl_rango, que reporta
-    #    solo hasta hoy y bloqueaba los valores que el BCRA publica a futuro).
-    #    El BCRA publica la serie del ICL "desde el 17 del mes en curso hasta
-    #    el 16 del mes siguiente". La ventana se renueva el dia 17 de cada mes.
-    #    Por eso el tope publicado depende del dia de hoy:
-    #      - del 1 al 16: la ventana vigente llega hasta el 16 de ESTE mes
-    #      - del 17 en adelante: ya se publico la ventana hasta el 16 del mes que viene
-    #    Pedimos justo hasta ese tope: capturamos todo lo disponible sin pasarnos
-    #    (pasarse dispara data_error=fechas_faltantes y no devuelve tabla).
-    if CAPTCHA_API_KEY:
-        now = datetime.now()
-        desde = (now - timedelta(days=60)).strftime("%Y-%m-%d")
-        if now.day >= 17:
-            # ventana nueva: hasta el 16 del mes siguiente
-            if now.month == 12:
-                hasta_dt = now.replace(year=now.year + 1, month=1, day=16)
-            else:
-                hasta_dt = now.replace(month=now.month + 1, day=16)
-        else:
-            # ventana vigente: hasta el 16 de este mes
-            hasta_dt = now.replace(day=16)
-        hasta = hasta_dt.strftime("%Y-%m-%d")
-        tabla_data = fetch_icl_tabla(desde, hasta)
-        new_data.update(tabla_data)
+    if not new_data:
+        print("  Sin datos nuevos, manteniendo archivo existente")
+        return len(by_date)
 
     added = updated = 0
     for fecha, valor in new_data.items():
@@ -271,10 +127,10 @@ def update_icl():
     ]
     result = {
         "meta": {
-            "fuente": "BCRA serie 7988",
+            "fuente": "BCRA API estadisticas v4.0, idVariable 40 (ex serie 7988)",
             "descripcion": "Indice para Contratos de Locacion (ICL)",
             "frecuencia": "diaria",
-            "ultima_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            "ultima_actualizacion": now.strftime("%Y-%m-%d %H:%M:%S")
         },
         "data": sorted_data
     }
@@ -356,17 +212,15 @@ def update_ipc():
 # ══════════════════════════════════════════════════════════
 
 def main():
-    import urllib3
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     print(f"Scraper Juarez Beltran — {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Directorio de datos: {DATA_DIR}")
-    print(f"2Captcha: {'configurado' if CAPTCHA_API_KEY else 'NO configurado'}")
     icl_count = update_icl()
     ipc_count = update_ipc()
     print(f"\n═══ Resumen ═══")
     print(f"  ICL: {icl_count} registros")
     print(f"  IPC: {ipc_count} registros")
     print("  ✓ Completado")
+
 
 if __name__ == "__main__":
     main()
