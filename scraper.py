@@ -13,10 +13,14 @@ Fuentes:
          145.3_INGNACUAL_DICI_M_38.
          En ambos casos: variacion mensual redondeada a 1 decimal (= boletin
          INDEC) y acumulada en indice base 100 desde ene-2017.
+         Ademas, del mismo Excel se guarda el indice oficial (hoja "Indices
+         IPC Cobertura Nacional", base dic-2016 = 100) como indice_oficial:
+         la pagina lo usa para la variacion ANUAL, que asi coincide con el
+         interanual que publica el INDEC.
 
 Salida (data/):
   - icl.json     {meta, data:[{fecha:"dd/mm/yyyy", valor}]}
-  - ipc.json     {meta, data:[{fecha:"yyyy-mm", indice_ipc}]}
+  - ipc.json     {meta, data:[{fecha:"yyyy-mm", indice_ipc, indice_oficial?}]}
   - status.json  estado de cada fuente; la pagina lo lee para avisar si algo fallo
 
 Uso:
@@ -320,20 +324,12 @@ def load_sheets(content):
     return sheets
 
 
-def parse_indec_variaciones(content):
+def _serie_nivel_general(cand):
     """
-    Busca la hoja de variacion mensual (cobertura nacional), la fila de fechas y
-    la fila 'Nivel general' del bloque 'Total nacional'.
-    Devuelve [(yyyy-mm, var_pct_1dec), ...] ordenado.
+    En las hojas candidatas busca la fila de fechas y la fila 'Nivel general'
+    del bloque 'Total nacional'. Devuelve [(yyyy-mm, valor_crudo), ...] ordenado,
+    o None si no la encuentra.
     """
-    sheets = load_sheets(content)
-    dbg("hojas: " + ", ".join(n for n, _, _ in sheets))
-
-    # candidatas: nombre con 'variac' y 'mensual'; si ninguna, todas
-    cand = [s for s in sheets if "variac" in _norm(s[0]) and "mensual" in _norm(s[0])]
-    if not cand:
-        cand = sheets
-
     for name, rows, datemode in cand:
         # fila de fechas: la que mas meses parseables tenga (>= 12)
         best_hdr, best_months = None, {}
@@ -382,22 +378,66 @@ def parse_indec_variaciones(content):
             continue
         dbg(f"hoja '{name}': bloque nacional fila {nac}, 'Nivel general' fila {ng}, {len(serie)} valores")
         serie.sort()
-        # ¿viene en fraccion (0.019) o en porcentaje (1.9)?
-        if max(abs(v) for _, v in serie) < 1.0:
-            serie = [(ym, v * 100) for ym, v in serie]
-        serie = [(ym, round(v, 1)) for ym, v in serie]
-        dbg(f"hoja '{name}': ultimos 4 → {serie[-4:]}")
         return serie
+    return None
 
-    raise RuntimeError("no se pudo ubicar la serie 'Nivel general' / total nacional en el Excel")
+
+def parse_indec_variaciones(content):
+    """
+    Hoja de variacion mensual (cobertura nacional), fila 'Nivel general' del
+    bloque 'Total nacional'. Devuelve [(yyyy-mm, var_pct_1dec), ...] ordenado.
+    """
+    sheets = load_sheets(content)
+    dbg("hojas: " + ", ".join(n for n, _, _ in sheets))
+
+    # candidatas: nombre con 'variac' y 'mensual'; si ninguna, todas
+    cand = [s for s in sheets if "variac" in _norm(s[0]) and "mensual" in _norm(s[0])]
+    if not cand:
+        cand = sheets
+
+    serie = _serie_nivel_general(cand)
+    if not serie:
+        raise RuntimeError("no se pudo ubicar la serie 'Nivel general' / total nacional en el Excel")
+    # ¿viene en fraccion (0.019) o en porcentaje (1.9)?
+    if max(abs(v) for _, v in serie) < 1.0:
+        serie = [(ym, v * 100) for ym, v in serie]
+    serie = [(ym, round(v, 1)) for ym, v in serie]
+    dbg(f"variaciones: ultimos 4 → {serie[-4:]}")
+    return serie
+
+
+def parse_indec_indices(content):
+    """
+    Hoja de indices (cobertura nacional, base dic-2016 = 100), fila 'Nivel
+    general' del bloque 'Total nacional'. Devuelve {yyyy-mm: indice_oficial}.
+    Es el numero con el que el INDEC calcula su variacion interanual.
+    """
+    sheets = load_sheets(content)
+    cand = [s for s in sheets if "indice" in _norm(s[0]) and "nacional" in _norm(s[0])]
+    serie = _serie_nivel_general(cand) if cand else None
+    if not serie:
+        raise RuntimeError("no se pudo ubicar la hoja de indices (cobertura nacional) en el Excel")
+    d = dict(serie)
+    # control: base dic-2016 = 100 y serie creciente a niveles de miles
+    if abs(d.get("2016-12", 100.0) - 100.0) > 0.01 or max(d.values()) < 1000:
+        raise RuntimeError("la hoja de indices no parece base dic-2016 = 100")
+    dbg(f"indices oficiales: ultimos 2 → {serie[-2:]}")
+    return {ym: round(v, 4) for ym, v in d.items()}
 
 
 def fetch_ipc_indec():
-    """[(yyyy-mm, var_pct)] desde el Excel del INDEC. Lanza excepcion si falla."""
+    """([(yyyy-mm, var_pct)], archivo, {yyyy-mm: indice_oficial}) desde el Excel
+    del INDEC. Lanza excepcion si fallan las variaciones; si solo falla la hoja
+    de indices devuelve {} (el anual cae al calculo acumulado)."""
     print("  IPC INDEC: buscando Excel de series historicas...")
     url, content = download_indec_xls(indec_candidate_urls())
     serie = parse_indec_variaciones(content)
-    return serie, url.rsplit("/", 1)[-1]
+    try:
+        indices = parse_indec_indices(content)
+    except Exception as e:
+        print(f"  ! IPC INDEC: sin indices oficiales ({e}); el anual usara el acumulado")
+        indices = {}
+    return serie, url.rsplit("/", 1)[-1], indices
 
 
 # ══════════════════════════════════════════════════════════
@@ -442,10 +482,11 @@ def update_ipc(st):
     existing = load_json(IPC_FILE, {"data": []})
 
     primaria, respaldo = None, None
+    oficiales = {}
     err_primaria = err_respaldo = None
 
     try:
-        primaria, archivo = fetch_ipc_indec()
+        primaria, archivo, oficiales = fetch_ipc_indec()
         print(f"  IPC INDEC: {len(primaria)} meses, ultimo {primaria[-1][0]} = {primaria[-1][1]}%  ({archivo})")
     except Exception as e:
         err_primaria = str(e)
@@ -479,6 +520,13 @@ def update_ipc(st):
         return len(existing.get("data", []))
 
     ipc_data = acumular(serie)
+    # Indice oficial del INDEC (para la variacion anual). Si esta corrida no lo
+    # trajo (respaldo datos.gob.ar o fallo la hoja), se conserva el ya guardado.
+    previos = {d["fecha"]: d["indice_oficial"] for d in existing.get("data", []) if "indice_oficial" in d}
+    for d in ipc_data:
+        v = oficiales.get(d["fecha"], previos.get(d["fecha"]))
+        if v is not None:
+            d["indice_oficial"] = v
     # Nunca pisar con menos datos de los que ya habia
     prev_last = (existing.get("data") or [{}])[-1].get("fecha", "")
     if ipc_data and ipc_data[-1]["fecha"] < prev_last:
@@ -490,7 +538,7 @@ def update_ipc(st):
     save_json(IPC_FILE, {
         "meta": {
             "fuente": fuente,
-            "descripcion": "IPC Nivel General Nacional, variaciones mensuales (1 decimal = boletin INDEC) acumuladas base 100",
+            "descripcion": "IPC Nivel General Nacional. indice_ipc = variaciones mensuales (1 decimal = boletin INDEC) acumuladas base 100; indice_oficial = indice INDEC base dic-2016 (se usa para la variacion anual)",
             "frecuencia": "mensual",
             "ultima_actualizacion": now_str(),
         },

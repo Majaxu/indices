@@ -139,7 +139,7 @@
 
     <div class="footer-note">
       Fuentes: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA</a> — ICL (API oficial, variable 40) · <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC</a> — IPC Nacional
-      <br>IPC: variaciones mensuales del boletin INDEC acumuladas, con desfase de 2 meses respecto a la fecha de referencia. El rango muestra los meses incluidos (del primero al ultimo); los valores son el indice del mes anterior al primero y el del ultimo.
+      <br>IPC: desfase de 2 meses respecto a la fecha de referencia. Anual = indice oficial del INDEC (coincide con su interanual); semestral, cuatrimestral y trimestral = variaciones mensuales del boletin INDEC acumuladas. El rango muestra los meses incluidos (del primero al ultimo); los valores son el indice del mes anterior al primero y el del ultimo.
       <div id="dataSource" style="font-size:12px;font-weight:600;margin-top:6px"></div>
     </div>
   </div>
@@ -147,6 +147,7 @@
 <script>
 let iclData = {};
 let ipcIndex = {};
+let ipcOficial = {};   // indice oficial INDEC (base dic-2016), para la variacion anual
 let dataReady = false;
 let lastIclMonth = null;   // ultimo mes con dato REAL del dia 1 (tope para calcular)
 let status = null;         // data/status.json (estado de las fuentes), puede no existir
@@ -223,8 +224,10 @@ async function loadData() {
 
     // IPC: indice absoluto por mes
     ipcIndex = {};
+    ipcOficial = {};
     for (const d of ipcJson.data) {
       ipcIndex[d.fecha] = d.indice_ipc;
+      if (d.indice_oficial != null) ipcOficial[d.fecha] = d.indice_oficial;
     }
 
     dataReady = true;
@@ -314,7 +317,13 @@ function calculate() {
   }
   for (const p of P) {
     const ek = latestIpc, sk = subM(ek, p.m);
-    const ev = ipcIndex[ek], sv = ipcIndex[sk];
+    let ev = ipcIndex[ek], sv = ipcIndex[sk];
+    // Anual: se calcula con el indice oficial del INDEC (igual que su variacion
+    // interanual). Si falta ese indice, cae al acumulado del boletin y se avisa.
+    if (p.m === 12) {
+      if (ipcOficial[ek] != null && ipcOficial[sk] != null) { ev = ipcOficial[ek]; sv = ipcOficial[sk]; }
+      else if (ev != null && sv != null) amber.push('IPC anual: falta el indice oficial del INDEC; se calculo acumulando las variaciones mensuales del boletin (puede diferir unas decimas del interanual oficial).');
+    }
     if (ev != null && sv != null) {
       const v = ((ev / sv) - 1) * 100;
       // Rango: primer mes incluido → ultimo mes incluido (ej. semestral a sep = abr → sep).
