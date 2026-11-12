@@ -139,7 +139,7 @@
 
     <div class="footer-note">
       Fuentes: <a href="https://www.bcra.gob.ar/principales-variables-datos/?serie=7988" target="_blank">BCRA</a> — ICL (API oficial, variable 40) · <a href="https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31" target="_blank">INDEC</a> — IPC Nacional
-      <br>IPC: variaciones mensuales del boletin INDEC acumuladas, con desfase de 2 meses respecto a la fecha de referencia.
+      <br>IPC: variaciones mensuales del boletin INDEC acumuladas, con desfase de 2 meses respecto a la fecha de referencia. El rango muestra los meses incluidos (del primero al ultimo); los valores son el indice del mes anterior al primero y el del ultimo.
       <div id="dataSource" style="font-size:12px;font-weight:600;margin-top:6px"></div>
     </div>
   </div>
@@ -317,7 +317,9 @@ function calculate() {
     const ev = ipcIndex[ek], sv = ipcIndex[sk];
     if (ev != null && sv != null) {
       const v = ((ev / sv) - 1) * 100;
-      jb.innerHTML += row(p.l, `${fmtMY(sk)} → ${fmtMY(ek)}`, `${sv.toFixed(2)} → ${ev.toFixed(2)}`, v.toFixed(2)+'%', 'pct-green');
+      // Rango: primer mes incluido → ultimo mes incluido (ej. semestral a sep = abr → sep).
+      // Los valores siguen siendo el indice base (mes anterior al primero) → indice final.
+      jb.innerHTML += row(p.l, `${fmtMY(subM(ek, p.m - 1))} → ${fmtMY(ek)}`, `${sv.toFixed(2)} → ${ev.toFixed(2)}`, v.toFixed(2)+'%', 'pct-green');
       ssIpc.innerHTML += ssRow(p.l, v.toFixed(2)+'%');
     } else { jb.innerHTML += row(p.l,'—','—','sin dato','pct-red'); ssIpc.innerHTML += ssRow(p.l,'—'); }
   }
