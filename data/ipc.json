@@ -3,7 +3,7 @@
     "fuente": "INDEC (sh_ipc_divisiones.xls)",
     "descripcion": "IPC Nivel General Nacional. indice_ipc = variaciones mensuales (1 decimal = boletin INDEC) acumuladas base 100; indice_oficial = indice INDEC base dic-2016 (se usa para la variacion anual)",
     "frecuencia": "mensual",
-    "ultima_actualizacion": "2026-11-12 19:29:34"
+    "ultima_actualizacion": "2026-11-13 19:09:57"
   },
   "data": [
     {
